@@ -1,72 +1,98 @@
 import 'package:flutter/material.dart';
-import '../services/imc_service.dart';
+import '../services/database_service.dart';
 import 'home_screen.dart';
+import 'registro_screen.dart';
 
 class Login extends StatefulWidget {
+  const Login({super.key});
+
   @override
-  _LoginState createState() => _LoginState();
+  State<Login> createState() => _LoginState();
 }
 
 class _LoginState extends State<Login> {
-  double peso = 60;
-  double estatura = 1.60;
-  TextEditingController nombre = TextEditingController();
+
+  final correoCtrl = TextEditingController();
+  final passCtrl = TextEditingController();
+
+  void login() {
+    var user = DatabaseService.usuarioActual;
+
+    if (user == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("No hay usuario registrado")),
+      );
+      return;
+    }
+
+    if (correoCtrl.text == user.correo &&
+        passCtrl.text == user.password) {
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => HomeScreen(
+            nombre: user.nombre,
+            imc: user.imc,
+          ),
+        ),
+      );
+
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Datos incorrectos")),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Datos del usuario")),
+      appBar: AppBar(title: const Text("Login")),
 
       body: Padding(
         padding: const EdgeInsets.all(20),
+
         child: Column(
           children: [
+
             TextField(
-              controller: nombre,
+              controller: correoCtrl,
               decoration: const InputDecoration(
-                labelText: "Nombre",
-                prefixIcon: Icon(Icons.person),
+                labelText: "Correo",
+                prefixIcon: Icon(Icons.email),
               ),
             ),
 
             const SizedBox(height: 20),
 
-            Text("Peso: ${peso.toStringAsFixed(0)} kg"),
-            Slider(
-              value: peso,
-              min: 30,
-              max: 150,
-              onChanged: (v) => setState(() => peso = v),
-            ),
-
-            const SizedBox(height: 20),
-
-            Text("Estatura: ${estatura.toStringAsFixed(2)} m"),
-            Slider(
-              value: estatura,
-              min: 1.2,
-              max: 2.2,
-              onChanged: (v) => setState(() => estatura = v),
+            TextField(
+              controller: passCtrl,
+              obscureText: true,
+              decoration: const InputDecoration(
+                labelText: "Contraseña",
+                prefixIcon: Icon(Icons.lock),
+              ),
             ),
 
             const SizedBox(height: 30),
 
             ElevatedButton(
-              onPressed: () {
-                double imc = IMCService.calcularIMC(peso, estatura);
+              onPressed: login,
+              child: const Text("Iniciar sesión"),
+            ),
 
-                Navigator.pushReplacement(
+            TextButton(
+              onPressed: () {
+                Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => HomeScreen(
-                      nombre: nombre.text,
-                      imc: imc,
-                    ),
+                    builder: (_) => const RegistroScreen(),
                   ),
                 );
               },
-              child: const Text("Continuar"),
-            ),
+              child: const Text("Crear cuenta"),
+            )
           ],
         ),
       ),

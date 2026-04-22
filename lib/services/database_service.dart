@@ -1,4 +1,5 @@
 import '../models/comida_model.dart';
+import '../models/user_model.dart';
 
 class DatabaseService {
   static final List<ComidaModel> _comidas = [];
@@ -54,5 +55,10 @@ class DatabaseService {
 
   static double getMeta() {
     return metaCalorias;
+  }
+  static UserModel? usuarioActual;
+
+  static void guardarUsuario(UserModel user) {
+    usuarioActual = user;
   }
 }
