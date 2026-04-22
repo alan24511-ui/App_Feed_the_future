@@ -10,6 +10,7 @@ import 'perfil.dart';
 import 'mascota.dart';
 import 'ajustes.dart';
 import 'notificacion.dart';
+import 'meta_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final String nombre;
@@ -23,18 +24,76 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
-  // 🔥 GRÁFICA
+  // 🔥 WIDGET TARJETA MODERNA
+  Widget cardWidget(Widget child) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
+          )
+        ],
+      ),
+      child: child,
+    );
+  }
+
+  // 🔥 GRÁFICA MEJORADA
   Widget grafica() {
     final data = DatabaseService.caloriasPorTipoHoy();
 
     return SizedBox(
-      height: 200,
+      height: 220,
       child: PieChart(
         PieChartData(
+          sectionsSpace: 2,
+          centerSpaceRadius: 40,
+
           sections: [
-            PieChartSectionData(value: data["Desayuno"]!, title: "Desayuno"),
-            PieChartSectionData(value: data["Comida"]!, title: "Comida"),
-            PieChartSectionData(value: data["Cena"]!, title: "Cena"),
+            PieChartSectionData(
+              value: data["Desayuno"]!,
+              color: Colors.orange,
+              radius: 60,
+              title:
+              "Desayuno\n${data["Desayuno"]!.toStringAsFixed(0)} kcal",
+              titleStyle: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+
+            PieChartSectionData(
+              value: data["Comida"]!,
+              color: Colors.green,
+              radius: 60,
+              title:
+              "Comida\n${data["Comida"]!.toStringAsFixed(0)} kcal",
+              titleStyle: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+
+            PieChartSectionData(
+              value: data["Cena"]!,
+              color: Colors.blue,
+              radius: 60,
+              title:
+              "Cena\n${data["Cena"]!.toStringAsFixed(0)} kcal",
+              titleStyle: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
           ],
         ),
       ),
@@ -44,10 +103,17 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     double total = DatabaseService.caloriasHoy();
+    double meta = DatabaseService.getMeta();
+    double progreso = total / meta;
 
     return Scaffold(
+      backgroundColor: const Color(0xFFF5F7FA),
+
       appBar: AppBar(
         title: Text("Hola, ${widget.nombre} 👋"),
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        foregroundColor: Colors.black,
         actions: [
           IconButton(
             icon: const Icon(Icons.notifications),
@@ -67,43 +133,79 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           children: [
 
-            // 🔹 TARJETA IMC
-            Card(
-              child: ListTile(
-                leading: const Icon(Icons.monitor_heart, color: Colors.green),
+            // 🔹 IMC
+            cardWidget(
+              ListTile(
+                leading: Icon(Icons.monitor_heart, color: Colors.green.shade600),
                 title: Text("IMC: ${widget.imc.toStringAsFixed(1)}"),
                 subtitle: const Text("Estado saludable"),
               ),
             ),
 
-            const SizedBox(height: 15),
-
-            // 🔥 CALORÍAS DEL DÍA
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  children: [
-                    const Text(
-                      "Calorías de hoy",
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            // 🔥 CALORÍAS
+            cardWidget(
+              Column(
+                children: [
+                  const Text(
+                    "Calorías de hoy",
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey,
                     ),
-                    const SizedBox(height: 10),
-                    Text(
-                      "${total.toStringAsFixed(1)} kcal",
-                      style: const TextStyle(fontSize: 28),
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    "${total.toStringAsFixed(0)}",
+                    style: const TextStyle(
+                      fontSize: 36,
+                      fontWeight: FontWeight.bold,
                     ),
-                  ],
-                ),
+                  ),
+                  const Text(
+                    "kcal",
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                ],
               ),
             ),
 
-            const SizedBox(height: 15),
+            // 🔥 PROGRESO
+            cardWidget(
+              Column(
+                children: [
+
+                  const Text(
+                    "Progreso diario",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: LinearProgressIndicator(
+                      value: progreso > 1 ? 1 : progreso,
+                      minHeight: 12,
+                      backgroundColor: Colors.grey.shade200,
+                      valueColor: AlwaysStoppedAnimation(
+                        progreso > 1 ? Colors.red : Colors.green,
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  Text(
+                    "${total.toStringAsFixed(0)} / ${meta.toStringAsFixed(0)} kcal",
+                  ),
+                ],
+              ),
+            ),
 
             // 🔥 GRÁFICA
-            grafica(),
+            cardWidget(grafica()),
 
-            const SizedBox(height: 15),
+            const SizedBox(height: 10),
 
             // 🔹 GRID
             Expanded(
@@ -118,9 +220,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   _card(context, "Perfil", Icons.person, Perfil()),
                   _card(context, "Mascota", Icons.pets, Mascota()),
                   _card(context, "Ajustes", Icons.settings, Ajustes()),
-
-                  // 🔥 NUEVO: HISTORIAL
-                  _card(context, "Historial", Icons.history, HistorialScreen()),
+                  _card(context, "Meta", Icons.flag, const MetaScreen()),
+                  _card(context, "Historial", Icons.history, const HistorialScreen()),
                 ],
               ),
             ),
@@ -130,7 +231,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // 🔹 TARJETA REUTILIZABLE
+  // 🔹 TARJETAS DEL GRID
   Widget _card(BuildContext ctx, String title, IconData icon, Widget page) {
     return GestureDetector(
       onTap: () async {
@@ -141,16 +242,23 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() {});
       },
 
-      child: Card(
-        elevation: 6,
-        shape: RoundedRectangleBorder(
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
           borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            )
+          ],
         ),
 
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 45, color: Colors.green),
+            Icon(icon, size: 45, color: Colors.green.shade600),
             const SizedBox(height: 10),
             Text(
               title,
@@ -164,7 +272,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-// 🔥 HISTORIAL NUEVO (USANDO MODELO)
+// 🔥 HISTORIAL
 class HistorialScreen extends StatelessWidget {
   const HistorialScreen({super.key});
 
@@ -174,7 +282,6 @@ class HistorialScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(title: const Text("Historial")),
-
       body: data.isEmpty
           ? const Center(child: Text("No hay registros"))
           : ListView.builder(
