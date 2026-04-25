@@ -6,7 +6,6 @@ class DatabaseService {
   static final FirebaseFirestore _db = FirebaseFirestore.instance;
   static final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  // 🔥 referencia del usuario
   static String get _uid => _auth.currentUser!.uid;
 
   static CollectionReference get _ref =>
@@ -17,7 +16,7 @@ class DatabaseService {
     await _ref.add(comida.toMap());
   }
 
-  // 🔹 OBTENER COMIDAS (STREAM REALTIME)
+  // 🔹 STREAM COMIDAS
   static Stream<List<ComidaModel>> obtenerComidasStream() {
     return _ref.snapshots().map((snapshot) {
       return snapshot.docs.map((doc) {
@@ -69,10 +68,4 @@ class DatabaseService {
 
     return data;
   }
-
-  // 🔥 METAS
-  static double metaCalorias = 2000;
-
-  static void setMeta(double meta) => metaCalorias = meta;
-  static double getMeta() => metaCalorias;
 }

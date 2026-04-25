@@ -7,7 +7,10 @@ class UserModel {
   double peso;
   double altura;
   double imc;
-  double meta;
+
+  // 🔥 ahora separados correctamente
+  String? metaSeleccionada; // perder_peso / mantener / ganar_masa
+  double? caloriasMeta;     // 1800 / 2200 / 2600
 
   UserModel({
     required this.correo,
@@ -18,9 +21,11 @@ class UserModel {
     required this.peso,
     required this.altura,
     required this.imc,
-    required this.meta,
+    this.metaSeleccionada,
+    this.caloriasMeta,
   });
 
+  // 🔥 guardar en Firestore
   Map<String, dynamic> toMap() {
     return {
       'correo': correo,
@@ -31,7 +36,8 @@ class UserModel {
       'peso': peso,
       'altura': altura,
       'imc': imc,
-      'meta': meta,
+      'metaSeleccionada': metaSeleccionada,
+      'caloriasMeta': caloriasMeta,
     };
   }
 
@@ -46,7 +52,8 @@ class UserModel {
       peso: (map['peso'] ?? 0).toDouble(),
       altura: (map['altura'] ?? 0).toDouble(),
       imc: (map['imc'] ?? 0).toDouble(),
-      meta: (map['meta'] ?? 2000).toDouble(),
+      metaSeleccionada: map['metaSeleccionada'],
+      caloriasMeta: (map['caloriasMeta'] ?? 0).toDouble(),
     );
   }
 }

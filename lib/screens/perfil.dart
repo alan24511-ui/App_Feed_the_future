@@ -12,6 +12,17 @@ class Perfil extends StatefulWidget {
 class _PerfilState extends State<Perfil> {
   final user = FirebaseAuth.instance.currentUser;
 
+  String convertirMeta(String meta) {
+    switch (meta) {
+      case "perder_peso":
+        return "Perder peso";
+      case "ganar_masa":
+        return "Ganar masa muscular";
+      default:
+        return "Mantener peso";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (user == null) {
@@ -42,6 +53,12 @@ class _PerfilState extends State<Perfil> {
           }
 
           final data = snapshot.data!.data() as Map<String, dynamic>;
+
+          final metaTexto = convertirMeta(
+            data['metaSeleccionada'] ?? "mantener",
+          );
+
+          final calorias = data['caloriasMeta'] ?? 2200;
 
           return SingleChildScrollView(
             padding: const EdgeInsets.all(16),
@@ -114,12 +131,12 @@ class _PerfilState extends State<Perfil> {
                   ],
                 ),
 
-                // 🔹 META
+                // 🔥 META (CORREGIDA)
                 _card(
                   title: "Meta nutricional",
                   children: [
-                    _item("Calorías diarias",
-                        "${data['meta']} kcal"),
+                    _item("Objetivo", metaTexto),
+                    _item("Calorías diarias", "$calorias kcal"),
                   ],
                 ),
 

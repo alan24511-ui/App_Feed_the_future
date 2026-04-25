@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'home_screen.dart';
+import 'meta_screen.dart';
 
 class RegistroScreen extends StatefulWidget {
   const RegistroScreen({super.key});
@@ -55,7 +55,6 @@ class _RegistroScreenState extends State<RegistroScreen> {
       double imc = calcularIMC(peso, altura);
       double meta = calcularMeta(imc);
 
-      // 🔐 CREAR USUARIO AUTH
       final result = await _auth.createUserWithEmailAndPassword(
         email: correoCtrl.text.trim(),
         password: passCtrl.text.trim(),
@@ -64,7 +63,6 @@ class _RegistroScreenState extends State<RegistroScreen> {
       final user = result.user;
 
       if (user != null) {
-        // ☁️ GUARDAR PERFIL COMPLETO EN FIRESTORE
         await FirebaseFirestore.instance
             .collection('usuarios')
             .doc(user.uid)
@@ -78,19 +76,18 @@ class _RegistroScreenState extends State<RegistroScreen> {
           'altura': altura,
           'imc': imc,
           'meta': meta,
+          'metaSeleccionada': null,
         });
 
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Registro exitoso")),
         );
 
-        Navigator.pushReplacement(
-          context,
+        if (!mounted) return;
+
+        Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (_) => HomeScreen(
-              nombre: nombreCtrl.text,
-              imc: imc,
-            ),
+            builder: (context) => const MetaScreen(),
           ),
         );
       }
@@ -108,10 +105,6 @@ class _RegistroScreenState extends State<RegistroScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(mensaje)),
       );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error: $e")),
-      );
     }
   }
 
@@ -121,8 +114,7 @@ class _RegistroScreenState extends State<RegistroScreen> {
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: TextField(
         controller: ctrl,
-        keyboardType:
-        isNumber ? TextInputType.number : TextInputType.text,
+        keyboardType: isNumber ? TextInputType.number : TextInputType.text,
         obscureText: isPassword,
         decoration: InputDecoration(
           labelText: label,
@@ -137,22 +129,20 @@ class _RegistroScreenState extends State<RegistroScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Registro Firebase")),
-
+      backgroundColor: const Color(0xFFF1F8E9),
+      appBar: AppBar(
+        title: const Text("Crear cuenta 🥗"),
+        backgroundColor: const Color(0xFF66BB6A),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
-
         child: SingleChildScrollView(
           child: Column(
             children: [
               campo("Correo electrónico", correoCtrl),
               campo("Contraseña", passCtrl, isPassword: true),
-
-              const SizedBox(height: 10),
-
               campo("Nombre", nombreCtrl),
               campo("Apellido", apellidoCtrl),
-
               campo("Edad", edadCtrl, isNumber: true),
 
               DropdownButtonFormField<String>(
@@ -180,8 +170,12 @@ class _RegistroScreenState extends State<RegistroScreen> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF66BB6A),
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                  ),
                   onPressed: registrar,
-                  child: const Text("Registrarse"),
+                  child: const Text("Registrarme"),
                 ),
               ),
             ],

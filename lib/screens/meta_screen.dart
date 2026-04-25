@@ -1,76 +1,127 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class MetaScreen extends StatefulWidget {
+import 'home_screen.dart';
+
+class MetaScreen extends StatelessWidget {
   const MetaScreen({super.key});
 
-  @override
-  State<MetaScreen> createState() => _MetaScreenState();
-}
+  Future<void> seleccionarMeta(BuildContext context, String meta) async {
+    final user = FirebaseAuth.instance.currentUser;
 
-class _MetaScreenState extends State<MetaScreen> {
+    if (user != null) {
+      double caloriasMeta;
 
-  final controller = TextEditingController();
+      if (meta == "perder_peso") {
+        caloriasMeta = 1800;
+      } else if (meta == "mantener") {
+        caloriasMeta = 2200;
+      } else {
+        caloriasMeta = 2600;
+      }
 
-  final uid = FirebaseAuth.instance.currentUser!.uid;
+      await FirebaseFirestore.instance
+          .collection('usuarios')
+          .doc(user.uid)
+          .update({
+        'metaSeleccionada': meta,
+        'caloriasMeta': caloriasMeta,
+      });
 
-  @override
-  void initState() {
-    super.initState();
-    cargarMeta();
-  }
+      final doc = await FirebaseFirestore.instance
+          .collection('usuarios')
+          .doc(user.uid)
+          .get();
 
-  Future<void> cargarMeta() async {
-    final doc = await FirebaseFirestore.instance
-        .collection('usuarios')
-        .doc(uid)
-        .get();
+      final data = doc.data()!;
 
-    if (doc.exists) {
-      controller.text =
-          (doc.data()?['meta'] ?? 2000).toString();
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (context) => HomeScreen(
+            nombre: data['nombre'],
+            imc: data['imc'],
+          ),
+        ),
+            (route) => false,
+      );
     }
   }
 
-  Future<void> guardarMeta() async {
-    double meta = double.tryParse(controller.text) ?? 2000;
-
-    await FirebaseFirestore.instance
-        .collection('usuarios')
-        .doc(uid)
-        .set({
-      'meta': meta,
-    }, SetOptions(merge: true));
-
-    Navigator.pop(context);
+  Widget card(BuildContext context, String titulo, String desc,
+      IconData icon, String meta) {
+    return GestureDetector(
+      onTap: () => seleccionarMeta(context, meta),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 15),
+        padding: const EdgeInsets.all(18),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Colors.green.shade300,
+              Colors.green.shade600,
+            ],
+          ),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, color: Colors.white, size: 35),
+            const SizedBox(width: 15),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    titulo,
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    desc,
+                    style: const TextStyle(color: Colors.white70),
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Meta diaria")),
-
+      backgroundColor: const Color(0xFFF1F8E9),
+      appBar: AppBar(
+        title: const Text("Tu objetivo 🥗"),
+        backgroundColor: Colors.green,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-
-            TextField(
-              controller: controller,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: "Calorías objetivo",
-                border: OutlineInputBorder(),
+            const Text(
+              "Elige tu meta calórica",
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: Colors.green,
               ),
             ),
-
             const SizedBox(height: 20),
 
-            ElevatedButton(
-              onPressed: guardarMeta,
-              child: const Text("Guardar"),
-            )
+            card(context, "Perder peso", "1800 kcal/día",
+                Icons.local_fire_department, "perder_peso"),
+
+            card(context, "Mantener peso", "2200 kcal/día",
+                Icons.balance, "mantener"),
+
+            card(context, "Ganar masa muscular", "2600 kcal/día",
+                Icons.fitness_center, "ganar_masa"),
           ],
         ),
       ),
