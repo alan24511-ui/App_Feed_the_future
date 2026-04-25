@@ -16,56 +16,48 @@ class DatabaseService {
     await _ref.add(comida.toMap());
   }
 
-  // 🔹 STREAM COMIDAS
-  static Stream<List<ComidaModel>> obtenerComidasStream() {
+  // 🔥 STREAM CALORÍAS HOY (REAL TIME)
+  static Stream<double> caloriasHoyStream() {
     return _ref.snapshots().map((snapshot) {
-      return snapshot.docs.map((doc) {
-        return ComidaModel.fromMap(doc.data() as Map<String, dynamic>);
-      }).toList();
+      final hoy = DateTime.now();
+      double total = 0;
+
+      for (var doc in snapshot.docs) {
+        final c = ComidaModel.fromMap(doc.data() as Map<String, dynamic>);
+
+        if (c.fecha.day == hoy.day &&
+            c.fecha.month == hoy.month &&
+            c.fecha.year == hoy.year) {
+          total += c.calorias;
+        }
+      }
+
+      return total;
     });
   }
 
-  // 🔥 CALORÍAS HOY
-  static Future<double> caloriasHoy() async {
-    final snapshot = await _ref.get();
-    final hoy = DateTime.now();
+  // 🔥 STREAM GRÁFICA POR TIPO
+  static Stream<Map<String, double>> caloriasPorTipoStream() {
+    return _ref.snapshots().map((snapshot) {
+      final hoy = DateTime.now();
 
-    double total = 0;
+      Map<String, double> data = {
+        "Desayuno": 0,
+        "Comida": 0,
+        "Cena": 0,
+      };
 
-    for (var doc in snapshot.docs) {
-      final c = ComidaModel.fromMap(doc.data() as Map<String, dynamic>);
+      for (var doc in snapshot.docs) {
+        final c = ComidaModel.fromMap(doc.data() as Map<String, dynamic>);
 
-      if (c.fecha.day == hoy.day &&
-          c.fecha.month == hoy.month &&
-          c.fecha.year == hoy.year) {
-        total += c.calorias;
+        if (c.fecha.day == hoy.day &&
+            c.fecha.month == hoy.month &&
+            c.fecha.year == hoy.year) {
+          data[c.tipo] = (data[c.tipo] ?? 0) + c.calorias;
+        }
       }
-    }
 
-    return total;
-  }
-
-  // 🔥 CALORÍAS POR TIPO
-  static Future<Map<String, double>> caloriasPorTipoHoy() async {
-    final snapshot = await _ref.get();
-    final hoy = DateTime.now();
-
-    Map<String, double> data = {
-      "Desayuno": 0,
-      "Comida": 0,
-      "Cena": 0,
-    };
-
-    for (var doc in snapshot.docs) {
-      final c = ComidaModel.fromMap(doc.data() as Map<String, dynamic>);
-
-      if (c.fecha.day == hoy.day &&
-          c.fecha.month == hoy.month &&
-          c.fecha.year == hoy.year) {
-        data[c.tipo] = (data[c.tipo] ?? 0) + c.calorias;
-      }
-    }
-
-    return data;
+      return data;
+    });
   }
 }

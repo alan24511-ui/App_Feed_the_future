@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -30,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _index = 0;
 
   String metaUsuario = "mantener";
-  double metaCalorias = 2200; // fallback seguro
+  double metaCalorias = 2200;
 
   @override
   void initState() {
@@ -38,7 +37,6 @@ class _HomeScreenState extends State<HomeScreen> {
     cargarMeta();
   }
 
-  // 🔥 TRAER META REAL DESDE FIREBASE
   void cargarMeta() async {
     final user = FirebaseAuth.instance.currentUser;
 
@@ -55,7 +53,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  // 🎨 COLOR DINÁMICO
   Color getPrimaryColor() {
     switch (metaUsuario) {
       case "perder_peso":
@@ -70,11 +67,11 @@ class _HomeScreenState extends State<HomeScreen> {
   String getMensajeMeta() {
     switch (metaUsuario) {
       case "perder_peso":
-        return "🔥 Estás en modo quema grasa. Vamos con todo!";
+        return "🔥 Quema grasa activa";
       case "ganar_masa":
-        return "💪 Modo volumen activo. Nutrición fuerte!";
+        return "💪 Modo volumen activo";
       default:
-        return "⚖️ Manteniendo equilibrio saludable.";
+        return "⚖️ Equilibrio saludable";
     }
   }
 
@@ -85,81 +82,116 @@ class _HomeScreenState extends State<HomeScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 5),
-          )
-        ],
       ),
       child: child,
     );
   }
 
+  // 🥧 GRÁFICA GRANDE Y CLARA
   Widget grafica(Map<String, double> data) {
-    return SizedBox(
-      height: 220,
-      child: PieChart(
-        PieChartData(
-          sectionsSpace: 2,
-          centerSpaceRadius: 40,
-          sections: [
-            PieChartSectionData(
-              value: data["Desayuno"] ?? 0,
-              color: Colors.orange,
-              radius: 60,
-              title: "Desayuno",
-            ),
-            PieChartSectionData(
-              value: data["Comida"] ?? 0,
-              color: Colors.green,
-              radius: 60,
-              title: "Comida",
-            ),
-            PieChartSectionData(
-              value: data["Cena"] ?? 0,
-              color: Colors.blue,
-              radius: 60,
-              title: "Cena",
-            ),
-          ],
+    double desayuno = data["Desayuno"] ?? 0;
+    double comida = data["Comida"] ?? 0;
+    double cena = data["Cena"] ?? 0;
+
+    double total = desayuno + comida + cena;
+
+    double d = total == 0 ? 0 : desayuno / total;
+    double c = total == 0 ? 0 : comida / total;
+    double n = total == 0 ? 0 : cena / total;
+
+    return Column(
+      children: [
+        const SizedBox(height: 10),
+
+        SizedBox(
+          height: 260,
+          width: 260,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+
+              SizedBox(
+                height: 260,
+                width: 260,
+                child: CircularProgressIndicator(
+                  value: 1,
+                  strokeWidth: 20,
+                  color: Colors.grey.shade200,
+                ),
+              ),
+
+              SizedBox(
+                height: 260,
+                width: 260,
+                child: CircularProgressIndicator(
+                  value: d,
+                  strokeWidth: 20,
+                  color: Colors.orange,
+                  backgroundColor: Colors.transparent,
+                ),
+              ),
+
+              SizedBox(
+                height: 260,
+                width: 260,
+                child: CircularProgressIndicator(
+                  value: c,
+                  strokeWidth: 20,
+                  color: Colors.green,
+                  backgroundColor: Colors.transparent,
+                ),
+              ),
+
+              SizedBox(
+                height: 260,
+                width: 260,
+                child: CircularProgressIndicator(
+                  value: n,
+                  strokeWidth: 20,
+                  color: Colors.blue,
+                  backgroundColor: Colors.transparent,
+                ),
+              ),
+
+              Text(
+                "${total.toStringAsFixed(0)} kcal",
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
+
+        const SizedBox(height: 15),
+
+        Wrap(
+          spacing: 20,
+          children: const [
+            _Legend(color: Colors.orange, text: "Desayuno"),
+            _Legend(color: Colors.green, text: "Comida"),
+            _Legend(color: Colors.blue, text: "Cena"),
+          ],
+        )
+      ],
     );
   }
 
   Widget _homeContent() {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(16, 10, 16, 90),
       child: Column(
         children: [
+
           // 🔥 HEADER
           Container(
-            width: double.infinity,
             padding: const EdgeInsets.all(16),
-            margin: const EdgeInsets.only(bottom: 10),
             decoration: BoxDecoration(
               color: getPrimaryColor().withOpacity(0.15),
               borderRadius: BorderRadius.circular(15),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  getMensajeMeta(),
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: getPrimaryColor(),
-                  ),
-                ),
-                const SizedBox(height: 5),
-                const Text(
-                  "En la app tienes recetas diseñadas para ayudarte 🥗",
-                ),
-              ],
-            ),
+            child: Text(getMensajeMeta()),
           ),
 
           // IMC
@@ -167,13 +199,12 @@ class _HomeScreenState extends State<HomeScreen> {
             ListTile(
               leading: Icon(Icons.monitor_heart, color: getPrimaryColor()),
               title: Text("IMC: ${widget.imc.toStringAsFixed(1)}"),
-              subtitle: const Text("Estado corporal"),
             ),
           ),
 
-          // CALORÍAS HOY
-          FutureBuilder<double>(
-            future: DatabaseService.caloriasHoy(),
+          // 🔥 CALORÍAS EN TIEMPO REAL
+          StreamBuilder<double>(
+            stream: DatabaseService.caloriasHoyStream(),
             builder: (context, snapshot) {
               final total = snapshot.data ?? 0;
               final progreso = total / metaCalorias;
@@ -187,9 +218,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         Text(
                           total.toStringAsFixed(0),
                           style: const TextStyle(
-                              fontSize: 32, fontWeight: FontWeight.bold),
+                              fontSize: 32,
+                              fontWeight: FontWeight.bold),
                         ),
-                        const Text("kcal"),
                       ],
                     ),
                   ),
@@ -201,7 +232,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         const SizedBox(height: 10),
                         LinearProgressIndicator(
                           value: progreso > 1 ? 1 : progreso,
-                          minHeight: 10,
                           backgroundColor: Colors.grey.shade200,
                           valueColor:
                           AlwaysStoppedAnimation(getPrimaryColor()),
@@ -218,9 +248,9 @@ class _HomeScreenState extends State<HomeScreen> {
             },
           ),
 
-          // GRÁFICA
-          FutureBuilder<Map<String, double>>(
-            future: DatabaseService.caloriasPorTipoHoy(),
+          // 🔥 GRÁFICA GRANDE
+          StreamBuilder<Map<String, double>>(
+            stream: DatabaseService.caloriasPorTipoStream(),
             builder: (context, snapshot) {
               final data = snapshot.data ??
                   {
@@ -249,10 +279,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FA),
+      resizeToAvoidBottomInset: true,
 
       appBar: AppBar(
-        title: Text("Hola, ${widget.nombre} 👋"),
+        title: Text("Hola ${widget.nombre}"),
         backgroundColor: getPrimaryColor(),
         actions: [
           IconButton(
@@ -269,21 +299,52 @@ class _HomeScreenState extends State<HomeScreen> {
 
       body: _screens[_index],
 
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _index,
-        selectedItemColor: getPrimaryColor(),
-        unselectedItemColor: Colors.grey,
-        type: BottomNavigationBarType.fixed,
-        onTap: (i) => setState(() => _index = i),
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Inicio"),
-          BottomNavigationBarItem(icon: Icon(Icons.fastfood), label: "Comida"),
-          BottomNavigationBarItem(icon: Icon(Icons.menu_book), label: "Recetas"),
-          BottomNavigationBarItem(icon: Icon(Icons.pets), label: "Mascota"),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Perfil"),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Ajustes"),
-        ],
+      bottomNavigationBar: SafeArea(
+        child: BottomNavigationBar(
+          currentIndex: _index,
+          selectedItemColor: getPrimaryColor(),
+          unselectedItemColor: Colors.grey,
+          type: BottomNavigationBarType.fixed,
+          onTap: (i) => setState(() => _index = i),
+          items: const [
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: "Inicio"),
+            BottomNavigationBarItem(icon: Icon(Icons.fastfood), label: "Comida"),
+            BottomNavigationBarItem(icon: Icon(Icons.menu_book), label: "Recetas"),
+            BottomNavigationBarItem(icon: Icon(Icons.pets), label: "Mascota"),
+            BottomNavigationBarItem(icon: Icon(Icons.person), label: "Perfil"),
+            BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Ajustes"),
+          ],
+        ),
       ),
+    );
+  }
+}
+
+// 🔥 LEYENDA
+class _Legend extends StatelessWidget {
+  final Color color;
+  final String text;
+
+  const _Legend({
+    required this.color,
+    required this.text,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          width: 10,
+          height: 10,
+          decoration: BoxDecoration(
+            color: color,
+            shape: BoxShape.circle,
+          ),
+        ),
+        const SizedBox(width: 5),
+        Text(text),
+      ],
     );
   }
 }
