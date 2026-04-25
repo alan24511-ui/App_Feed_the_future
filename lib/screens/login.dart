@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../services/database_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'home_screen.dart';
 import 'registro_screen.dart';
 
@@ -15,32 +15,48 @@ class _LoginState extends State<Login> {
   final correoCtrl = TextEditingController();
   final passCtrl = TextEditingController();
 
-  void login() {
-    var user = DatabaseService.usuarioActual;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
-    if (user == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("No hay usuario registrado")),
+  void login() async {
+    try {
+      final result = await _auth.signInWithEmailAndPassword(
+        email: correoCtrl.text.trim(),
+        password: passCtrl.text.trim(),
       );
-      return;
-    }
 
-    if (correoCtrl.text == user.correo &&
-        passCtrl.text == user.password) {
+      final user = result.user;
 
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (_) => HomeScreen(
-            nombre: user.nombre,
-            imc: user.imc,
+      if (user != null) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (_) => HomeScreen(
+              nombre: user.email ?? "Usuario",
+              imc: 0, // luego lo sacamos de Firestore
+            ),
           ),
-        ),
+        );
+      }
+
+    } on FirebaseAuthException catch (e) {
+
+      String mensaje = "Error";
+
+      if (e.code == 'user-not-found') {
+        mensaje = "Usuario no existe";
+      } else if (e.code == 'wrong-password') {
+        mensaje = "Contraseña incorrecta";
+      } else if (e.code == 'invalid-email') {
+        mensaje = "Correo inválido";
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(mensaje)),
       );
 
-    } else {
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Datos incorrectos")),
+        SnackBar(content: Text("Error: $e")),
       );
     }
   }
@@ -48,7 +64,7 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Login")),
+      appBar: AppBar(title: const Text("Login Firebase")),
 
       body: Padding(
         padding: const EdgeInsets.all(20),

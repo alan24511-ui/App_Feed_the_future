@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1079524859740",
+    "project_id": "feed-the-future",
+    "storage_bucket": "feed-the-future.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1079524859740:android:1ddbe7d3fe64370c71ab99",
+        "android_client_info": {
+          "package_name": "com.example.androidstudioprojects"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAe2_DwRAkYUcnIyitIQpigxVZsatqsIEw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

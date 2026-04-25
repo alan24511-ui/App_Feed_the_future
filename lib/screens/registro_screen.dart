@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../services/database_service.dart';
-import '../models/user_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../services/firestore_service.dart';
 import 'home_screen.dart';
 
 class RegistroScreen extends StatefulWidget {
@@ -22,6 +22,9 @@ class _RegistroScreenState extends State<RegistroScreen> {
 
   String sexo = "Masculino";
 
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirestoreService _firestore = FirestoreService();
+
   double calcularIMC(double peso, double altura) {
     return peso / (altura * altura);
   }
@@ -32,7 +35,7 @@ class _RegistroScreenState extends State<RegistroScreen> {
     return 1800;
   }
 
-  void registrar() {
+  void registrar() async {
 
     if (correoCtrl.text.isEmpty ||
         passCtrl.text.isEmpty ||
@@ -47,38 +50,77 @@ class _RegistroScreenState extends State<RegistroScreen> {
       return;
     }
 
-    double peso = double.parse(pesoCtrl.text);
-    double altura = double.parse(alturaCtrl.text);
-    int edad = int.parse(edadCtrl.text);
+    try {
 
-    double imc = calcularIMC(peso, altura);
-    double meta = calcularMeta(imc);
+      double peso = double.parse(pesoCtrl.text);
+      double altura = double.parse(alturaCtrl.text);
+      int edad = int.parse(edadCtrl.text);
 
-    UserModel user = UserModel(
-      correo: correoCtrl.text,
-      password: passCtrl.text,
-      nombre: nombreCtrl.text,
-      apellido: apellidoCtrl.text,
-      edad: edad,
-      sexo: sexo,
-      peso: peso,
-      altura: altura,
-      imc: imc,
-      meta: meta,
-    );
+      double imc = calcularIMC(peso, altura);
+      double meta = calcularMeta(imc);
 
-    DatabaseService.guardarUsuario(user);
-    DatabaseService.setMeta(meta);
+      // 🔐 1. Crear usuario en Firebase Auth
+      final result = await _auth.createUserWithEmailAndPassword(
+        email: correoCtrl.text.trim(),
+        password: passCtrl.text.trim(),
+      );
 
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (_) => HomeScreen(
-          nombre: user.nombre,
-          imc: user.imc,
-        ),
-      ),
-    );
+      final user = result.user;
+
+      if (user != null) {
+
+        // ☁️ 2. Guardar datos en Firestore
+        await _firestore.guardarUsuario(
+          nombre: nombreCtrl.text,
+          imc: imc,
+        );
+
+        // 🔥 EXTRA: guardar más datos
+        await _firestore.db.collection('usuarios').doc(user.uid).update({
+          'apellido': apellidoCtrl.text,
+          'edad': edad,
+          'sexo': sexo,
+          'peso': peso,
+          'altura': altura,
+          'meta': meta,
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Registro exitoso")),
+        );
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (_) => HomeScreen(
+              nombre: nombreCtrl.text,
+              imc: imc,
+            ),
+          ),
+        );
+      }
+
+    } on FirebaseAuthException catch (e) {
+
+      String mensaje = "Error";
+
+      if (e.code == 'email-already-in-use') {
+        mensaje = "El correo ya existe";
+      } else if (e.code == 'weak-password') {
+        mensaje = "Contraseña muy débil";
+      } else if (e.code == 'invalid-email') {
+        mensaje = "Correo inválido";
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(mensaje)),
+      );
+
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error: $e")),
+      );
+    }
   }
 
   Widget campo(String label, TextEditingController ctrl,
@@ -102,7 +144,7 @@ class _RegistroScreenState extends State<RegistroScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Registro")),
+      appBar: AppBar(title: const Text("Registro Firebase")),
 
       body: Padding(
         padding: const EdgeInsets.all(16),
