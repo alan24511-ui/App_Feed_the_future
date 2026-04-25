@@ -1,6 +1,5 @@
 class UserModel {
   String correo;
-  String password;
   String nombre;
   String apellido;
   int edad;
@@ -12,7 +11,6 @@ class UserModel {
 
   UserModel({
     required this.correo,
-    required this.password,
     required this.nombre,
     required this.apellido,
     required this.edad,
@@ -22,4 +20,33 @@ class UserModel {
     required this.imc,
     required this.meta,
   });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'correo': correo,
+      'nombre': nombre,
+      'apellido': apellido,
+      'edad': edad,
+      'sexo': sexo,
+      'peso': peso,
+      'altura': altura,
+      'imc': imc,
+      'meta': meta,
+    };
+  }
+
+  // 🔥 crear desde Firestore
+  factory UserModel.fromMap(Map<String, dynamic> map) {
+    return UserModel(
+      correo: map['correo'] ?? '',
+      nombre: map['nombre'] ?? '',
+      apellido: map['apellido'] ?? '',
+      edad: map['edad'] ?? 0,
+      sexo: map['sexo'] ?? '',
+      peso: (map['peso'] ?? 0).toDouble(),
+      altura: (map['altura'] ?? 0).toDouble(),
+      imc: (map['imc'] ?? 0).toDouble(),
+      meta: (map['meta'] ?? 2000).toDouble(),
+    );
+  }
 }

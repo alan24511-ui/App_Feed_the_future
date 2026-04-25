@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'home_screen.dart';
 import 'registro_screen.dart';
 
@@ -11,7 +13,6 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-
   final correoCtrl = TextEditingController();
   final passCtrl = TextEditingController();
 
@@ -27,19 +28,29 @@ class _LoginState extends State<Login> {
       final user = result.user;
 
       if (user != null) {
+        // 🔥 OBTENER DATOS REALES DESDE FIRESTORE
+        final doc = await FirebaseFirestore.instance
+            .collection('usuarios')
+            .doc(user.uid)
+            .get();
+
+        final data = doc.data();
+
+        if (data == null) {
+          throw Exception("No existe el perfil en Firestore");
+        }
+
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (_) => HomeScreen(
-              nombre: user.email ?? "Usuario",
-              imc: 0, // luego lo sacamos de Firestore
+              nombre: data['nombre'] ?? user.email,
+              imc: (data['imc'] ?? 0).toDouble(),
             ),
           ),
         );
       }
-
     } on FirebaseAuthException catch (e) {
-
       String mensaje = "Error";
 
       if (e.code == 'user-not-found') {
@@ -53,7 +64,6 @@ class _LoginState extends State<Login> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(mensaje)),
       );
-
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Error: $e")),
@@ -71,7 +81,6 @@ class _LoginState extends State<Login> {
 
         child: Column(
           children: [
-
             TextField(
               controller: correoCtrl,
               decoration: const InputDecoration(

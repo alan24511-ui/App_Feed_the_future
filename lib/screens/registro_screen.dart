@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../services/firestore_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'home_screen.dart';
 
 class RegistroScreen extends StatefulWidget {
@@ -11,7 +12,6 @@ class RegistroScreen extends StatefulWidget {
 }
 
 class _RegistroScreenState extends State<RegistroScreen> {
-
   final correoCtrl = TextEditingController();
   final passCtrl = TextEditingController();
   final nombreCtrl = TextEditingController();
@@ -23,7 +23,6 @@ class _RegistroScreenState extends State<RegistroScreen> {
   String sexo = "Masculino";
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirestoreService _firestore = FirestoreService();
 
   double calcularIMC(double peso, double altura) {
     return peso / (altura * altura);
@@ -36,14 +35,12 @@ class _RegistroScreenState extends State<RegistroScreen> {
   }
 
   void registrar() async {
-
     if (correoCtrl.text.isEmpty ||
         passCtrl.text.isEmpty ||
         nombreCtrl.text.isEmpty ||
         edadCtrl.text.isEmpty ||
         pesoCtrl.text.isEmpty ||
         alturaCtrl.text.isEmpty) {
-
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Completa todos los campos")),
       );
@@ -51,7 +48,6 @@ class _RegistroScreenState extends State<RegistroScreen> {
     }
 
     try {
-
       double peso = double.parse(pesoCtrl.text);
       double altura = double.parse(alturaCtrl.text);
       int edad = int.parse(edadCtrl.text);
@@ -59,7 +55,7 @@ class _RegistroScreenState extends State<RegistroScreen> {
       double imc = calcularIMC(peso, altura);
       double meta = calcularMeta(imc);
 
-      // 🔐 1. Crear usuario en Firebase Auth
+      // 🔐 CREAR USUARIO AUTH
       final result = await _auth.createUserWithEmailAndPassword(
         email: correoCtrl.text.trim(),
         password: passCtrl.text.trim(),
@@ -68,20 +64,19 @@ class _RegistroScreenState extends State<RegistroScreen> {
       final user = result.user;
 
       if (user != null) {
-
-        // ☁️ 2. Guardar datos en Firestore
-        await _firestore.guardarUsuario(
-          nombre: nombreCtrl.text,
-          imc: imc,
-        );
-
-        // 🔥 EXTRA: guardar más datos
-        await _firestore.db.collection('usuarios').doc(user.uid).update({
+        // ☁️ GUARDAR PERFIL COMPLETO EN FIRESTORE
+        await FirebaseFirestore.instance
+            .collection('usuarios')
+            .doc(user.uid)
+            .set({
+          'nombre': nombreCtrl.text,
           'apellido': apellidoCtrl.text,
+          'correo': correoCtrl.text.trim(),
           'edad': edad,
           'sexo': sexo,
           'peso': peso,
           'altura': altura,
+          'imc': imc,
           'meta': meta,
         });
 
@@ -99,9 +94,7 @@ class _RegistroScreenState extends State<RegistroScreen> {
           ),
         );
       }
-
     } on FirebaseAuthException catch (e) {
-
       String mensaje = "Error";
 
       if (e.code == 'email-already-in-use') {
@@ -115,7 +108,6 @@ class _RegistroScreenState extends State<RegistroScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(mensaje)),
       );
-
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Error: $e")),
@@ -129,7 +121,8 @@ class _RegistroScreenState extends State<RegistroScreen> {
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: TextField(
         controller: ctrl,
-        keyboardType: isNumber ? TextInputType.number : TextInputType.text,
+        keyboardType:
+        isNumber ? TextInputType.number : TextInputType.text,
         obscureText: isPassword,
         decoration: InputDecoration(
           labelText: label,
@@ -152,7 +145,6 @@ class _RegistroScreenState extends State<RegistroScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-
               campo("Correo electrónico", correoCtrl),
               campo("Contraseña", passCtrl, isPassword: true),
 
@@ -166,7 +158,10 @@ class _RegistroScreenState extends State<RegistroScreen> {
               DropdownButtonFormField<String>(
                 value: sexo,
                 items: ["Masculino", "Femenino"]
-                    .map((s) => DropdownMenuItem(value: s, child: Text(s)))
+                    .map((s) => DropdownMenuItem(
+                  value: s,
+                  child: Text(s),
+                ))
                     .toList(),
                 onChanged: (v) => setState(() => sexo = v!),
                 decoration: const InputDecoration(

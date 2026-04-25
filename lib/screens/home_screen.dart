@@ -16,7 +16,11 @@ class HomeScreen extends StatefulWidget {
   final String nombre;
   final double imc;
 
-  const HomeScreen({super.key, required this.nombre, required this.imc});
+  const HomeScreen({
+    super.key,
+    required this.nombre,
+    required this.imc,
+  });
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -24,7 +28,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
-  // 🔥 WIDGET TARJETA MODERNA
+  // 🔥 CARD MODERNA
   Widget cardWidget(Widget child) {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -44,50 +48,45 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // 🔥 GRÁFICA MEJORADA
-  Widget grafica() {
-    final data = DatabaseService.caloriasPorTipoHoy();
-
+  // 🔥 GRÁFICA (FIREBASE)
+  Widget grafica(Map<String, double> data) {
     return SizedBox(
       height: 220,
       child: PieChart(
         PieChartData(
           sectionsSpace: 2,
           centerSpaceRadius: 40,
-
           sections: [
             PieChartSectionData(
-              value: data["Desayuno"]!,
+              value: data["Desayuno"] ?? 0,
               color: Colors.orange,
               radius: 60,
               title:
-              "Desayuno\n${data["Desayuno"]!.toStringAsFixed(0)} kcal",
+              "Desayuno\n${(data["Desayuno"] ?? 0).toStringAsFixed(0)}",
               titleStyle: const TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
             ),
-
             PieChartSectionData(
-              value: data["Comida"]!,
+              value: data["Comida"] ?? 0,
               color: Colors.green,
               radius: 60,
               title:
-              "Comida\n${data["Comida"]!.toStringAsFixed(0)} kcal",
+              "Comida\n${(data["Comida"] ?? 0).toStringAsFixed(0)}",
               titleStyle: const TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
             ),
-
             PieChartSectionData(
-              value: data["Cena"]!,
+              value: data["Cena"] ?? 0,
               color: Colors.blue,
               radius: 60,
               title:
-              "Cena\n${data["Cena"]!.toStringAsFixed(0)} kcal",
+              "Cena\n${(data["Cena"] ?? 0).toStringAsFixed(0)}",
               titleStyle: const TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
@@ -102,9 +101,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double total = DatabaseService.caloriasHoy();
+
     double meta = DatabaseService.getMeta();
-    double progreso = total / meta;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
@@ -136,74 +134,100 @@ class _HomeScreenState extends State<HomeScreen> {
             // 🔹 IMC
             cardWidget(
               ListTile(
-                leading: Icon(Icons.monitor_heart, color: Colors.green.shade600),
+                leading: Icon(Icons.monitor_heart,
+                    color: Colors.green.shade600),
                 title: Text("IMC: ${widget.imc.toStringAsFixed(1)}"),
                 subtitle: const Text("Estado saludable"),
               ),
             ),
 
-            // 🔥 CALORÍAS
-            cardWidget(
-              Column(
-                children: [
-                  const Text(
-                    "Calorías de hoy",
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    "${total.toStringAsFixed(0)}",
-                    style: const TextStyle(
-                      fontSize: 36,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const Text(
-                    "kcal",
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                ],
-              ),
-            ),
+            // 🔥 CALORÍAS (FIREBASE)
+            FutureBuilder<double>(
+              future: DatabaseService.caloriasHoy(),
+              builder: (context, snapshot) {
 
-            // 🔥 PROGRESO
-            cardWidget(
-              Column(
-                children: [
+                final total = snapshot.data ?? 0;
+                final progreso = total / meta;
 
-                  const Text(
-                    "Progreso diario",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
+                return Column(
+                  children: [
 
-                  const SizedBox(height: 10),
-
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: LinearProgressIndicator(
-                      value: progreso > 1 ? 1 : progreso,
-                      minHeight: 12,
-                      backgroundColor: Colors.grey.shade200,
-                      valueColor: AlwaysStoppedAnimation(
-                        progreso > 1 ? Colors.red : Colors.green,
+                    cardWidget(
+                      Column(
+                        children: [
+                          const Text(
+                            "Calorías de hoy",
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey,
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          Text(
+                            total.toStringAsFixed(0),
+                            style: const TextStyle(
+                              fontSize: 36,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const Text("kcal"),
+                        ],
                       ),
                     ),
-                  ),
 
-                  const SizedBox(height: 10),
+                    // 🔥 PROGRESO
+                    cardWidget(
+                      Column(
+                        children: [
+                          const Text("Progreso diario",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold)),
 
-                  Text(
-                    "${total.toStringAsFixed(0)} / ${meta.toStringAsFixed(0)} kcal",
-                  ),
-                ],
-              ),
+                          const SizedBox(height: 10),
+
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: LinearProgressIndicator(
+                              value: progreso > 1 ? 1 : progreso,
+                              minHeight: 12,
+                              backgroundColor: Colors.grey.shade200,
+                              valueColor: AlwaysStoppedAnimation(
+                                progreso > 1
+                                    ? Colors.red
+                                    : Colors.green,
+                              ),
+                            ),
+                          ),
+
+                          const SizedBox(height: 10),
+
+                          Text(
+                            "${total.toStringAsFixed(0)} / "
+                                "${meta.toStringAsFixed(0)} kcal",
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
 
-            // 🔥 GRÁFICA
-            cardWidget(grafica()),
+            // 🔥 GRÁFICA FIREBASE
+            FutureBuilder<Map<String, double>>(
+              future: DatabaseService.caloriasPorTipoHoy(),
+              builder: (context, snapshot) {
+
+                final data = snapshot.data ??
+                    {
+                      "Desayuno": 0,
+                      "Comida": 0,
+                      "Cena": 0,
+                    };
+
+                return cardWidget(grafica(data));
+              },
+            ),
 
             const SizedBox(height: 10),
 
@@ -215,13 +239,20 @@ class _HomeScreenState extends State<HomeScreen> {
                 mainAxisSpacing: 15,
 
                 children: [
-                  _card(context, "Registrar comida", Icons.fastfood, const RegistrarComida()),
-                  _card(context, "Recetas", Icons.menu_book, Recetas()),
-                  _card(context, "Perfil", Icons.person, Perfil()),
-                  _card(context, "Mascota", Icons.pets, Mascota()),
-                  _card(context, "Ajustes", Icons.settings, Ajustes()),
-                  _card(context, "Meta", Icons.flag, const MetaScreen()),
-                  _card(context, "Historial", Icons.history, const HistorialScreen()),
+                  _card(context, "Registrar comida",
+                      Icons.fastfood, const RegistrarComida()),
+                  _card(context, "Recetas",
+                      Icons.menu_book, Recetas()),
+                  _card(context, "Perfil",
+                      Icons.person, Perfil()),
+                  _card(context, "Mascota",
+                      Icons.pets, Mascota()),
+                  _card(context, "Ajustes",
+                      Icons.settings, Ajustes()),
+                  _card(context, "Meta",
+                      Icons.flag, const MetaScreen()),
+                  _card(context, "Historial",
+                      Icons.history, const HistorialScreen()),
                 ],
               ),
             ),
@@ -231,8 +262,9 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // 🔹 TARJETAS DEL GRID
-  Widget _card(BuildContext ctx, String title, IconData icon, Widget page) {
+  // 🔹 CARD GRID
+  Widget _card(BuildContext ctx, String title,
+      IconData icon, Widget page) {
     return GestureDetector(
       onTap: () async {
         await Navigator.push(
@@ -258,12 +290,15 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 45, color: Colors.green.shade600),
+            Icon(icon,
+                size: 45,
+                color: Colors.green.shade600),
             const SizedBox(height: 10),
             Text(
               title,
               textAlign: TextAlign.center,
-              style: const TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold),
             ),
           ],
         ),
@@ -272,32 +307,52 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-// 🔥 HISTORIAL
+// 🔥 HISTORIAL (FIREBASE STREAM)
 class HistorialScreen extends StatelessWidget {
   const HistorialScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    List<ComidaModel> data = DatabaseService.obtenerComidas();
 
     return Scaffold(
       appBar: AppBar(title: const Text("Historial")),
-      body: data.isEmpty
-          ? const Center(child: Text("No hay registros"))
-          : ListView.builder(
-        itemCount: data.length,
-        itemBuilder: (_, i) {
-          final c = data[i];
 
-          return ListTile(
-            leading: const Icon(Icons.restaurant),
-            title: Text(c.nombre),
-            subtitle: Text(
-              "${c.calorias.toStringAsFixed(1)} kcal - ${c.tipo}",
-            ),
-            trailing: Text(
-              "${c.fecha.day}/${c.fecha.month}",
-            ),
+      body: StreamBuilder<List<ComidaModel>>(
+        stream: DatabaseService.obtenerComidasStream(),
+
+        builder: (context, snapshot) {
+
+          if (!snapshot.hasData) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          final data = snapshot.data!;
+
+          if (data.isEmpty) {
+            return const Center(
+              child: Text("No hay registros"),
+            );
+          }
+
+          return ListView.builder(
+            itemCount: data.length,
+            itemBuilder: (_, i) {
+
+              final c = data[i];
+
+              return ListTile(
+                leading: const Icon(Icons.restaurant),
+                title: Text(c.nombre),
+                subtitle: Text(
+                  "${c.calorias.toStringAsFixed(1)} kcal - ${c.tipo}",
+                ),
+                trailing: Text(
+                  "${c.fecha.day}/${c.fecha.month}",
+                ),
+              );
+            },
           );
         },
       ),

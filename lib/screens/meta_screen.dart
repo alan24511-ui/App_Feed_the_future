@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../services/database_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MetaScreen extends StatefulWidget {
   const MetaScreen({super.key});
@@ -12,10 +13,37 @@ class _MetaScreenState extends State<MetaScreen> {
 
   final controller = TextEditingController();
 
+  final uid = FirebaseAuth.instance.currentUser!.uid;
+
   @override
   void initState() {
     super.initState();
-    controller.text = DatabaseService.getMeta().toString();
+    cargarMeta();
+  }
+
+  Future<void> cargarMeta() async {
+    final doc = await FirebaseFirestore.instance
+        .collection('usuarios')
+        .doc(uid)
+        .get();
+
+    if (doc.exists) {
+      controller.text =
+          (doc.data()?['meta'] ?? 2000).toString();
+    }
+  }
+
+  Future<void> guardarMeta() async {
+    double meta = double.tryParse(controller.text) ?? 2000;
+
+    await FirebaseFirestore.instance
+        .collection('usuarios')
+        .doc(uid)
+        .set({
+      'meta': meta,
+    }, SetOptions(merge: true));
+
+    Navigator.pop(context);
   }
 
   @override
@@ -40,13 +68,7 @@ class _MetaScreenState extends State<MetaScreen> {
             const SizedBox(height: 20),
 
             ElevatedButton(
-              onPressed: () {
-                double meta = double.tryParse(controller.text) ?? 2000;
-
-                DatabaseService.setMeta(meta);
-
-                Navigator.pop(context);
-              },
+              onPressed: guardarMeta,
               child: const Text("Guardar"),
             )
           ],
