@@ -12,60 +12,125 @@ class Mascota extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    String imagen;
-    String mensaje;
-
-    // 🔥 lógica mejorada con 3 estados reales
-    if (calorias <= meta) {
-      imagen = 'assets/images/mascota.png';
-      mensaje = "¡Vas excelente! 💪";
-    }
-    else if (calorias <= meta * 1.2) {
-      imagen = 'assets/images/enojado.png';
-      mensaje = "Cuidado... te estás pasando 😡";
-    }
-    else {
-      imagen = 'assets/images/triste.png';
-      mensaje = "Te pasaste demasiado 😢";
-    }
+    String imagen = 'assets/images/mascota.png';
+    String mensaje = "Tu mascota está feliz contigo 💙";
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Tu mascota")),
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
 
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+        // 🌈 FONDO GRADIENTE
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color(0xFF4FACFE),
+              Color(0xFF00F2FE),
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
 
-            // 🐾 animación suave al cambiar estado
-            AnimatedSwitcher(
-              duration: const Duration(milliseconds: 400),
-              child: Image.asset(
-                imagen,
-                key: ValueKey(imagen),
-                width: 200,
+        child: SafeArea(
+          child: Column(
+            children: [
+
+              // 🔝 HEADER
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: const [
+                    Icon(Icons.pets, color: Colors.white),
+                    SizedBox(width: 10),
+                    Text(
+                      "Tu mascota",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
 
-            const SizedBox(height: 20),
+              const Spacer(),
 
-            Text(
-              mensaje,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+              // 🐶 TARJETA CENTRAL
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(25),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 15,
+                      offset: const Offset(0, 10),
+                    )
+                  ],
+                ),
+
+                child: Column(
+                  children: [
+
+                    // 🐾 IMAGEN
+                    AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 400),
+                      child: Image.asset(
+                        imagen,
+                        key: ValueKey(imagen),
+                        height: 180,
+                      ),
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    // 💬 MENSAJE
+                    Text(
+                      mensaje,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+
+                    const SizedBox(height: 15),
+
+                    // 📊 INFO CALORÍAS
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 10),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade100,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Text(
+                        "${calorias.toStringAsFixed(0)} / ${meta.toStringAsFixed(0)} kcal",
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
 
-            const SizedBox(height: 20),
+              const Spacer(),
 
-            Text(
-              "Calorías: ${calorias.toStringAsFixed(0)} / ${meta.toStringAsFixed(0)}",
-              style: const TextStyle(fontSize: 16),
-            ),
-          ],
+              // 🔽 FOOTER
+              Padding(
+                padding: const EdgeInsets.only(bottom: 20),
+                child: Text(
+                  "Sigue registrando tus comidas 🍎",
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.9),
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
