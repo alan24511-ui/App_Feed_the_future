@@ -87,7 +87,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // 🥧 GRÁFICA GRANDE Y CLARA
   Widget grafica(Map<String, double> data) {
     double desayuno = data["Desayuno"] ?? 0;
     double comida = data["Comida"] ?? 0;
@@ -109,7 +108,6 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Stack(
             alignment: Alignment.center,
             children: [
-
               SizedBox(
                 height: 260,
                 width: 260,
@@ -119,7 +117,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: Colors.grey.shade200,
                 ),
               ),
-
               SizedBox(
                 height: 260,
                 width: 260,
@@ -127,10 +124,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   value: d,
                   strokeWidth: 20,
                   color: Colors.orange,
-                  backgroundColor: Colors.transparent,
                 ),
               ),
-
               SizedBox(
                 height: 260,
                 width: 260,
@@ -138,10 +133,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   value: c,
                   strokeWidth: 20,
                   color: Colors.green,
-                  backgroundColor: Colors.transparent,
                 ),
               ),
-
               SizedBox(
                 height: 260,
                 width: 260,
@@ -149,10 +142,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   value: n,
                   strokeWidth: 20,
                   color: Colors.blue,
-                  backgroundColor: Colors.transparent,
                 ),
               ),
-
               Text(
                 "${total.toStringAsFixed(0)} kcal",
                 style: const TextStyle(
@@ -184,7 +175,6 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Column(
         children: [
 
-          // 🔥 HEADER
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
@@ -194,7 +184,6 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Text(getMensajeMeta()),
           ),
 
-          // IMC
           cardWidget(
             ListTile(
               leading: Icon(Icons.monitor_heart, color: getPrimaryColor()),
@@ -202,7 +191,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
 
-          // 🔥 CALORÍAS EN TIEMPO REAL
+          // 🔥 CALORÍAS + PROGRESO + MASCOTA
           StreamBuilder<double>(
             stream: DatabaseService.caloriasHoyStream(),
             builder: (context, snapshot) {
@@ -211,6 +200,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
               return Column(
                 children: [
+
+                  // 🐶 MASCOTA EN HOME (PRO LEVEL)
+                  Mascota(
+                    calorias: total,
+                    meta: metaCalorias,
+                  ),
+
                   cardWidget(
                     Column(
                       children: [
@@ -248,16 +244,14 @@ class _HomeScreenState extends State<HomeScreen> {
             },
           ),
 
-          // 🔥 GRÁFICA GRANDE
           StreamBuilder<Map<String, double>>(
             stream: DatabaseService.caloriasPorTipoStream(),
             builder: (context, snapshot) {
-              final data = snapshot.data ??
-                  {
-                    "Desayuno": 0,
-                    "Comida": 0,
-                    "Cena": 0,
-                  };
+              final data = snapshot.data ?? {
+                "Desayuno": 0,
+                "Comida": 0,
+                "Cena": 0,
+              };
 
               return cardWidget(grafica(data));
             },
@@ -267,20 +261,31 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  late final List<Widget> _screens = [
-    _homeContent(),
-    RegistrarComida(),
-    Recetas(),
-    Mascota(),
-    Perfil(),
-    Ajustes(),
-  ];
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
+    final screens = [
+      _homeContent(),
+      RegistrarComida(),
+      Recetas(),
 
+      // 🐶 MASCOTA TAB CORREGIDA
+      StreamBuilder<double>(
+        stream: DatabaseService.caloriasHoyStream(),
+        builder: (context, snapshot) {
+          final total = snapshot.data ?? 0;
+
+          return Mascota(
+            calorias: total,
+            meta: metaCalorias,
+          );
+        },
+      ),
+
+      Perfil(),
+      Ajustes(),
+    ];
+
+    return Scaffold(
       appBar: AppBar(
         title: Text("Hola ${widget.nombre}"),
         backgroundColor: getPrimaryColor(),
@@ -297,30 +302,27 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
 
-      body: _screens[_index],
+      body: screens[_index],
 
-      bottomNavigationBar: SafeArea(
-        child: BottomNavigationBar(
-          currentIndex: _index,
-          selectedItemColor: getPrimaryColor(),
-          unselectedItemColor: Colors.grey,
-          type: BottomNavigationBarType.fixed,
-          onTap: (i) => setState(() => _index = i),
-          items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: "Inicio"),
-            BottomNavigationBarItem(icon: Icon(Icons.fastfood), label: "Comida"),
-            BottomNavigationBarItem(icon: Icon(Icons.menu_book), label: "Recetas"),
-            BottomNavigationBarItem(icon: Icon(Icons.pets), label: "Mascota"),
-            BottomNavigationBarItem(icon: Icon(Icons.person), label: "Perfil"),
-            BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Ajustes"),
-          ],
-        ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _index,
+        selectedItemColor: getPrimaryColor(),
+        unselectedItemColor: Colors.grey,
+        type: BottomNavigationBarType.fixed,
+        onTap: (i) => setState(() => _index = i),
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Inicio"),
+          BottomNavigationBarItem(icon: Icon(Icons.fastfood), label: "Comida"),
+          BottomNavigationBarItem(icon: Icon(Icons.menu_book), label: "Recetas"),
+          BottomNavigationBarItem(icon: Icon(Icons.pets), label: "Mascota"),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Perfil"),
+          BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Ajustes"),
+        ],
       ),
     );
   }
 }
 
-// 🔥 LEYENDA
 class _Legend extends StatelessWidget {
   final Color color;
   final String text;
