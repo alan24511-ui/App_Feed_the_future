@@ -11,7 +11,7 @@ class RegistrarComida extends StatefulWidget {
 
 class _RegistrarComidaState extends State<RegistrarComida> {
 
-  // ---------------- LISTA DE COMIDAS ----------------
+  // ---------------- COMIDAS ----------------
   final List<Map<String, dynamic>> comidas = [
     {"nombre": "🌮 Tacos al pastor", "desc": "Clásico mexicano", "cal": 180, "carbs": 20, "prot": 10, "gras": 8},
     {"nombre": "🌯 Burrito", "desc": "Grande y completo", "cal": 300, "carbs": 35, "prot": 15, "gras": 12},
@@ -72,12 +72,15 @@ class _RegistrarComidaState extends State<RegistrarComida> {
   int gramos = 100;
   int porciones = 1;
   String tipoComida = "Comida";
+
   String? bebidaSeleccionada;
   List<String> acompanantesSeleccionados = [];
 
   final List<String> tipos = ["Desayuno", "Comida", "Cena"];
 
   final TextEditingController notas = TextEditingController();
+
+  // ---------------- CALCULOS ----------------
 
   double calcularCalorias() {
     if (comidaSeleccionada == null) return 0;
@@ -98,6 +101,29 @@ class _RegistrarComidaState extends State<RegistrarComida> {
 
     return base + extra;
   }
+
+  double calcularProteinas() {
+    if (comidaSeleccionada == null) return 0;
+    return (comidaSeleccionada!["prot"] ?? 0) *
+        (gramos / 100) *
+        porciones;
+  }
+
+  double calcularCarbs() {
+    if (comidaSeleccionada == null) return 0;
+    return (comidaSeleccionada!["carbs"] ?? 0) *
+        (gramos / 100) *
+        porciones;
+  }
+
+  double calcularGrasas() {
+    if (comidaSeleccionada == null) return 0;
+    return (comidaSeleccionada!["gras"] ?? 0) *
+        (gramos / 100) *
+        porciones;
+  }
+
+  // ---------------- UI ----------------
 
   void abrirDetalle(Map<String, dynamic> comida) {
     setState(() {
@@ -126,7 +152,6 @@ class _RegistrarComidaState extends State<RegistrarComida> {
           var comida = comidas[i];
 
           return Card(
-            margin: const EdgeInsets.symmetric(vertical: 8),
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(18)),
             child: ListTile(
@@ -208,8 +233,7 @@ class _RegistrarComidaState extends State<RegistrarComida> {
                             : null,
                         icon: const Icon(Icons.remove_circle),
                       ),
-                      Text("$porciones",
-                          style: const TextStyle(fontSize: 18)),
+                      Text("$porciones"),
                       IconButton(
                         onPressed: () =>
                             setModalState(() => porciones++),
@@ -221,7 +245,6 @@ class _RegistrarComidaState extends State<RegistrarComida> {
                   const SizedBox(height: 20),
 
                   const Text("Acompañantes"),
-
                   Wrap(
                     spacing: 8,
                     children: acompanantes.map((a) {
@@ -247,14 +270,13 @@ class _RegistrarComidaState extends State<RegistrarComida> {
                   const SizedBox(height: 20),
 
                   const Text("Bebida"),
-
                   DropdownButton<String>(
                     value: bebidaSeleccionada,
                     hint: const Text("Seleccionar bebida"),
                     items: bebidas.map((b) {
                       return DropdownMenuItem<String>(
-                        value: b["nombre"] as String,
-                        child: Text(b["nombre"] as String),
+                        value: b["nombre"],
+                        child: Text(b["nombre"]),
                       );
                     }).toList(),
                     onChanged: (v) =>
@@ -263,27 +285,15 @@ class _RegistrarComidaState extends State<RegistrarComida> {
 
                   const SizedBox(height: 20),
 
-                  TextField(
-                    controller: notas,
-                    decoration: const InputDecoration(
-                      labelText: "Notas",
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-
-                  const SizedBox(height: 20),
-
                   Card(
                     child: Padding(
                       padding: const EdgeInsets.all(12),
-                      child: Row(
-                        mainAxisAlignment:
-                        MainAxisAlignment.spaceBetween,
+                      child: Column(
                         children: [
-                          const Text("Calorías totales",
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                          Text("${total.toStringAsFixed(1)} kcal",
-                              style: const TextStyle(fontSize: 18)),
+                          Text("🔥 ${total.toStringAsFixed(1)} kcal"),
+                          Text("💪 ${calcularProteinas().toStringAsFixed(1)} g proteína"),
+                          Text("🍞 ${calcularCarbs().toStringAsFixed(1)} g carbs"),
+                          Text("🥑 ${calcularGrasas().toStringAsFixed(1)} g grasas"),
                         ],
                       ),
                     ),
@@ -295,10 +305,14 @@ class _RegistrarComidaState extends State<RegistrarComida> {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
+
                         DatabaseService.agregarComida(
                           ComidaModel(
                             nombre: comidaSeleccionada!["nombre"],
-                            calorias: total,
+                            calorias: calcularCalorias(),
+                            proteinas: calcularProteinas(),
+                            carbohidratos: calcularCarbs(),
+                            grasas: calcularGrasas(),
                             tipo: tipoComida,
                             fecha: DateTime.now(),
                           ),
@@ -308,7 +322,7 @@ class _RegistrarComidaState extends State<RegistrarComida> {
 
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                              content: Text("Comida guardada correctamente")),
+                              content: Text("Comida guardada")),
                         );
                       },
                       child: const Text("Guardar comida"),

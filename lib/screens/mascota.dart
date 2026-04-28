@@ -12,15 +12,34 @@ class Mascota extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    /// 🔥 PROGRESO
+    double progreso = meta == 0 ? 0 : calorias / meta;
+
     String imagen = 'assets/images/mascota.png';
     String mensaje = "Tu mascota está feliz contigo 💙";
+
+    /// 🔥 LÓGICA VISUAL
+    if (progreso == 0) {
+      imagen = 'assets/images/triste.png';
+      mensaje = "Tu mascota tiene hambre 😢";
+    } else if (progreso < 0.7) {
+      imagen = 'assets/images/mascota.png';
+      mensaje = "Vas bien 👍 sigue así";
+    } else if (progreso <= 1.1) {
+      imagen = 'assets/images/mascota.png';
+      mensaje = "¡Perfecto! 💪 estás en tu meta";
+    } else {
+      imagen = 'assets/images/enojado.png';
+      mensaje = "Te pasaste 😠 cuida tu consumo";
+    }
 
     return Scaffold(
       body: Container(
         width: double.infinity,
         height: double.infinity,
 
-        // 🌈 FONDO GRADIENTE
+        /// 🌈 FONDO
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
@@ -36,7 +55,7 @@ class Mascota extends StatelessWidget {
           child: Column(
             children: [
 
-              // 🔝 HEADER
+              /// HEADER
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: Row(
@@ -57,7 +76,7 @@ class Mascota extends StatelessWidget {
 
               const Spacer(),
 
-              // 🐶 TARJETA CENTRAL
+              /// TARJETA
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 20),
                 padding: const EdgeInsets.all(20),
@@ -76,7 +95,7 @@ class Mascota extends StatelessWidget {
                 child: Column(
                   children: [
 
-                    // 🐾 IMAGEN
+                    /// IMAGEN
                     AnimatedSwitcher(
                       duration: const Duration(milliseconds: 400),
                       child: Image.asset(
@@ -88,7 +107,7 @@ class Mascota extends StatelessWidget {
 
                     const SizedBox(height: 20),
 
-                    // 💬 MENSAJE
+                    /// MENSAJE
                     Text(
                       mensaje,
                       textAlign: TextAlign.center,
@@ -100,7 +119,7 @@ class Mascota extends StatelessWidget {
 
                     const SizedBox(height: 15),
 
-                    // 📊 INFO CALORÍAS
+                    /// CALORÍAS
                     Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16, vertical: 10),
@@ -113,13 +132,22 @@ class Mascota extends StatelessWidget {
                         style: const TextStyle(fontSize: 16),
                       ),
                     ),
+
+                    const SizedBox(height: 10),
+
+                    /// PROGRESO VISUAL
+                    LinearProgressIndicator(
+                      value: progreso > 1 ? 1 : progreso,
+                      minHeight: 10,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ],
                 ),
               ),
 
               const Spacer(),
 
-              // 🔽 FOOTER
+              /// FOOTER
               Padding(
                 padding: const EdgeInsets.only(bottom: 20),
                 child: Text(
