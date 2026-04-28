@@ -307,15 +307,13 @@ class _RegistrarComidaState extends State<RegistrarComida> {
                       onPressed: () {
 
                         DatabaseService.agregarComida(
-                          ComidaModel(
-                            nombre: comidaSeleccionada!["nombre"],
-                            calorias: calcularCalorias(),
-                            proteinas: calcularProteinas(),
-                            carbohidratos: calcularCarbs(),
-                            grasas: calcularGrasas(),
-                            tipo: tipoComida,
-                            fecha: DateTime.now(),
-                          ),
+                          nombre: comidaSeleccionada!["nombre"],
+                          calorias: calcularCalorias(),
+                          proteinas: calcularProteinas(),
+                          carbohidratos: calcularCarbs(),
+                          grasas: calcularGrasas(),
+                          tipo: tipoComida,
+                          fecha: DateTime.now(),
                         );
 
                         Navigator.pop(context);
