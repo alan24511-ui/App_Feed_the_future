@@ -10,6 +10,7 @@ class Mascota extends StatelessWidget {
     required this.meta,
   });
 
+
   @override
   Widget build(BuildContext context) {
 
@@ -91,6 +92,7 @@ class Mascota extends StatelessWidget {
                     )
                   ],
                 ),
+
 
                 child: Column(
                   children: [
