@@ -12,6 +12,61 @@ class Perfil extends StatefulWidget {
 class _PerfilState extends State<Perfil> {
   final user = FirebaseAuth.instance.currentUser;
 
+  final nombreCtrl = TextEditingController();
+  final apellidoCtrl = TextEditingController();
+  final edadCtrl = TextEditingController();
+  final pesoCtrl = TextEditingController();
+  final alturaCtrl = TextEditingController();
+
+  bool editando = false;
+
+  Future<Map<String, dynamic>> cargarDatos() async {
+    final doc = await FirebaseFirestore.instance
+        .collection('usuarios')
+        .doc(user!.uid)
+        .get();
+
+    final data = doc.data()!;
+
+    nombreCtrl.text = data['nombre'] ?? "";
+    apellidoCtrl.text = data['apellido'] ?? "";
+    edadCtrl.text = data['edad'].toString();
+    pesoCtrl.text = data['peso'].toString();
+    alturaCtrl.text = data['altura'].toString();
+
+    return data;
+  }
+
+  Future<void> guardar() async {
+    await FirebaseFirestore.instance
+        .collection('usuarios')
+        .doc(user!.uid)
+        .update({
+      "nombre": nombreCtrl.text,
+      "apellido": apellidoCtrl.text,
+      "edad": int.parse(edadCtrl.text),
+      "peso": double.parse(pesoCtrl.text),
+      "altura": double.parse(alturaCtrl.text),
+    });
+
+    setState(() => editando = false);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Perfil actualizado")),
+    );
+  }
+
+  Widget campo(String label, TextEditingController ctrl) {
+    return TextField(
+      controller: ctrl,
+      enabled: editando,
+      decoration: InputDecoration(
+        labelText: label,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+    );
+  }
+
   String convertirMeta(String meta) {
     switch (meta) {
       case "perder_peso":
@@ -27,7 +82,7 @@ class _PerfilState extends State<Perfil> {
   Widget build(BuildContext context) {
     if (user == null) {
       return const Scaffold(
-        body: Center(child: Text("No hay usuario logueado")),
+        body: Center(child: Text("No hay usuario")),
       );
     }
 
@@ -36,28 +91,29 @@ class _PerfilState extends State<Perfil> {
 
       appBar: AppBar(
         title: const Text("Perfil"),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        foregroundColor: Colors.black,
+        actions: [
+          IconButton(
+            icon: Icon(editando ? Icons.save : Icons.edit),
+            onPressed: () {
+              if (editando) {
+                guardar();
+              } else {
+                setState(() => editando = true);
+              }
+            },
+          )
+        ],
       ),
 
-      body: FutureBuilder<DocumentSnapshot>(
-        future: FirebaseFirestore.instance
-            .collection('usuarios')
-            .doc(user!.uid)
-            .get(),
-
+      body: FutureBuilder<Map<String, dynamic>>(
+        future: cargarDatos(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          final data = snapshot.data!.data() as Map<String, dynamic>;
-
-          final metaTexto = convertirMeta(
-            data['metaSeleccionada'] ?? "mantener",
-          );
-
+          final data = snapshot.data!;
+          final meta = convertirMeta(data['metaSeleccionada'] ?? "mantener");
           final calorias = data['caloriasMeta'] ?? 2200;
 
           return SingleChildScrollView(
@@ -66,93 +122,88 @@ class _PerfilState extends State<Perfil> {
             child: Column(
               children: [
 
-                // 🔹 HEADER
+                // HEADER
                 Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
-                        blurRadius: 10,
-                        offset: const Offset(0, 5),
-                      )
-                    ],
                   ),
-
                   child: Column(
                     children: [
                       const CircleAvatar(
-                        radius: 45,
+                        radius: 40,
                         backgroundColor: Colors.green,
-                        child: Icon(Icons.person,
-                            size: 50, color: Colors.white),
+                        child: Icon(Icons.person, size: 40, color: Colors.white),
                       ),
-
                       const SizedBox(height: 10),
-
                       Text(
                         "${data['nombre']} ${data['apellido']}",
                         style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
+                            fontSize: 18, fontWeight: FontWeight.bold),
                       ),
-
-                      const SizedBox(height: 5),
-
-                      Text(
-                        data['correo'] ?? user!.email,
-                        style: const TextStyle(color: Colors.grey),
-                      ),
+                      Text(user!.email ?? ""),
                     ],
                   ),
                 ),
 
                 const SizedBox(height: 20),
 
-                // 🔹 INFO PERSONAL
-                _card(
-                  title: "Información personal",
-                  children: [
-                    _item("Edad", "${data['edad']} años"),
-                    _item("Sexo", data['sexo']),
-                  ],
-                ),
+                // CAMPOS EDITABLES
+                campo("Nombre", nombreCtrl),
+                const SizedBox(height: 10),
+                campo("Apellido", apellidoCtrl),
+                const SizedBox(height: 10),
+                campo("Edad", edadCtrl),
+                const SizedBox(height: 10),
+                campo("Peso (kg)", pesoCtrl),
+                const SizedBox(height: 10),
+                campo("Altura (m)", alturaCtrl),
 
-                // 🔹 DATOS FÍSICOS
-                _card(
-                  title: "Datos físicos",
-                  children: [
-                    _item("Peso", "${data['peso']} kg"),
-                    _item("Altura", "${data['altura']} m"),
-                    _item("IMC", data['imc'].toString()),
-                  ],
-                ),
+                const SizedBox(height: 20),
 
-                // 🔥 META (CORREGIDA)
-                _card(
-                  title: "Meta nutricional",
-                  children: [
-                    _item("Objetivo", metaTexto),
-                    _item("Calorías diarias", "$calorias kcal"),
-                  ],
+                // META
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text("Meta nutricional",
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+
+                      const SizedBox(height: 10),
+
+                      Text("Objetivo: $meta"),
+                      Text("Calorías: $calorias kcal"),
+
+                      const SizedBox(height: 10),
+
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/meta');
+                          },
+                          child: const Text("Cambiar objetivo"),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
 
                 const SizedBox(height: 20),
 
-                // 🔴 BOTÓN CERRAR SESIÓN
+                // LOGOUT
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.red,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
                     ),
-
                     onPressed: () async {
                       await FirebaseAuth.instance.signOut();
 
@@ -164,7 +215,6 @@ class _PerfilState extends State<Perfil> {
                         );
                       }
                     },
-
                     child: const Text("Cerrar sesión"),
                   ),
                 )
@@ -172,61 +222,6 @@ class _PerfilState extends State<Perfil> {
             ),
           );
         },
-      ),
-    );
-  }
-
-  // 🔹 CARD
-  Widget _card({
-    required String title,
-    required List<Widget> children,
-  }) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 15),
-      padding: const EdgeInsets.all(16),
-
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 5),
-          )
-        ],
-      ),
-
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-            ),
-          ),
-          const SizedBox(height: 10),
-          ...children,
-        ],
-      ),
-    );
-  }
-
-  // 🔹 ITEM
-  Widget _item(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
-
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(label,
-              style: const TextStyle(color: Colors.grey)),
-          Text(value,
-              style: const TextStyle(fontWeight: FontWeight.bold)),
-        ],
       ),
     );
   }

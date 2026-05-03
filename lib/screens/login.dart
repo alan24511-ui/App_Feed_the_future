@@ -28,7 +28,6 @@ class _LoginState extends State<Login> {
       final user = result.user;
 
       if (user != null) {
-        // 🔥 OBTENER DATOS REALES DESDE FIRESTORE
         final doc = await FirebaseFirestore.instance
             .collection('usuarios')
             .doc(user.uid)
@@ -74,51 +73,146 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Login Firebase")),
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
 
-      body: Padding(
-        padding: const EdgeInsets.all(20),
+        // 🌈 FONDO MODERNO
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color(0xFF4FACFE),
+              Color(0xFF00F2FE),
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
 
-        child: Column(
-          children: [
-            TextField(
-              controller: correoCtrl,
-              decoration: const InputDecoration(
-                labelText: "Correo",
-                prefixIcon: Icon(Icons.email),
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(20),
+
+            child: Container(
+              padding: const EdgeInsets.all(25),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(25),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.15),
+                    blurRadius: 20,
+                    offset: const Offset(0, 10),
+                  )
+                ],
               ),
-            ),
 
-            const SizedBox(height: 20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
 
-            TextField(
-              controller: passCtrl,
-              obscureText: true,
-              decoration: const InputDecoration(
-                labelText: "Contraseña",
-                prefixIcon: Icon(Icons.lock),
-              ),
-            ),
-
-            const SizedBox(height: 30),
-
-            ElevatedButton(
-              onPressed: login,
-              child: const Text("Iniciar sesión"),
-            ),
-
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => const RegistroScreen(),
+                  // 🧠 ICONO / LOGO
+                  const Icon(
+                    Icons.health_and_safety,
+                    size: 70,
+                    color: Color(0xFF4FACFE),
                   ),
-                );
-              },
-              child: const Text("Crear cuenta"),
-            )
-          ],
+
+                  const SizedBox(height: 10),
+
+                  const Text(
+                    "Bienvenido",
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+
+                  const SizedBox(height: 5),
+
+                  const Text(
+                    "Inicia sesión para continuar",
+                    style: TextStyle(color: Colors.grey),
+                  ),
+
+                  const SizedBox(height: 25),
+
+                  // 📧 CORREO
+                  TextField(
+                    controller: correoCtrl,
+                    decoration: InputDecoration(
+                      labelText: "Correo",
+                      prefixIcon: const Icon(Icons.email),
+                      filled: true,
+                      fillColor: Colors.grey.shade100,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  // 🔒 PASSWORD
+                  TextField(
+                    controller: passCtrl,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      labelText: "Contraseña",
+                      prefixIcon: const Icon(Icons.lock),
+                      filled: true,
+                      fillColor: Colors.grey.shade100,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 25),
+
+                  // 🔵 BOTÓN LOGIN
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: login,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF4FACFE),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        elevation: 5,
+                      ),
+                      child: const Text(
+                        "Iniciar sesión",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 15),
+
+                  // 📝 REGISTRO
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const RegistroScreen(),
+                        ),
+                      );
+                    },
+                    child: const Text(
+                      "Crear cuenta",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
         ),
       ),
     );

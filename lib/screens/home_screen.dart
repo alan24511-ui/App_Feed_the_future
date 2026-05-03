@@ -33,15 +33,22 @@ class _HomeScreenState extends State<HomeScreen> {
   String metaUsuario = "mantener";
   double metaCalorias = 2200;
 
-  Map<String, dynamic>? detalleSeleccionado;
-  String? diaSeleccionado;
-  String? origenDetalle;
+  // 🔥 METAS MACROS
+  double proteMeta = 0;
+  double carbsMeta = 0;
+  double grasasMeta = 0;
+
+  // 🔥 CONSUMO HOY
+  double proteHoy = 0;
+  double carbsHoy = 0;
+  double grasasHoy = 0;
 
   Timer? _timer;
   DateTime? _ultimoDia;
 
   double caloriasHoy = 0;
   StreamSubscription? _caloriasSub;
+  StreamSubscription? _macrosSub;
 
   @override
   void initState() {
@@ -55,11 +62,23 @@ class _HomeScreenState extends State<HomeScreen> {
         caloriasHoy = value.toDouble();
       });
     });
+
+    // 🔥 ESCUCHAR MACROS
+    _macrosSub = DatabaseService.macrosHoyStream().listen((macros) {
+      if (!mounted) return;
+
+      setState(() {
+        proteHoy = (macros["prote"] ?? 0).toDouble();
+        carbsHoy = (macros["carbs"] ?? 0).toDouble();
+        grasasHoy = (macros["grasas"] ?? 0).toDouble();
+      });
+    });
   }
 
   @override
   void dispose() {
     _caloriasSub?.cancel();
+    _macrosSub?.cancel();
     _timer?.cancel();
     super.dispose();
   }
@@ -95,9 +114,15 @@ class _HomeScreenState extends State<HomeScreen> {
     if (!doc.exists) return;
 
     final data = doc.data()!;
+
     setState(() {
       metaUsuario = data['metaSeleccionada'] ?? "mantener";
       metaCalorias = (data['caloriasMeta'] ?? 2200).toDouble();
+
+      // 🔥 SI NO EXISTEN EN FIREBASE → USA DEFAULTS
+      proteMeta = (data['proteinaMeta'] ?? 150).toDouble();
+      carbsMeta = (data['carbsMeta'] ?? 250).toDouble();
+      grasasMeta = (data['grasasMeta'] ?? 70).toDouble();
     });
   }
 
@@ -131,162 +156,135 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void mostrarDetalle(Map<String, dynamic> data, String dia, String origen) {
-    _timer?.cancel();
-
-    setState(() {
-      detalleSeleccionado = data;
-      diaSeleccionado = dia;
-      origenDetalle = origen;
-    });
-
-    _timer = Timer(const Duration(seconds: 4), () {
-      if (mounted) {
-        setState(() => detalleSeleccionado = null);
-      }
-    });
-  }
-
   Widget buildHeader() {
-    return cardWidget(
-      Container(
-        padding: const EdgeInsets.all(18),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              getPrimaryColor(),
-              getPrimaryColor().withOpacity(0.7),
-            ],
-          ),
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Hola ${widget.nombre}",
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold)),
-            const SizedBox(height: 6),
-            const Text("🔥 Seguimiento nutricional activo",
-                style: TextStyle(color: Colors.white70)),
-            const SizedBox(height: 10),
-            Text("IMC ${widget.imc.toStringAsFixed(1)}",
-                style: const TextStyle(color: Colors.white))
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            getPrimaryColor(),
+            getPrimaryColor().withOpacity(0.7),
           ],
         ),
+        borderRadius: BorderRadius.circular(22),
       ),
-    );
-  }
-
-  Widget graficaDiariaPie(Map<String, dynamic> data) {
-    final desayuno = (data["Desayuno"] ?? 0).toDouble();
-    final comida = (data["Comida"] ?? 0).toDouble();
-    final cena = (data["Cena"] ?? 0).toDouble();
-
-    final total = desayuno + comida + cena;
-
-    return GestureDetector(
-      onTap: () async {
-        final macros = await DatabaseService.macrosHoyStream().first;
-
-        mostrarDetalle({
-          "Desayuno": desayuno,
-          "Comida": comida,
-          "Cena": cena,
-          "Proteína": (macros["prote"] ?? 0).toDouble(),
-          "Carbs": (macros["carbs"] ?? 0).toDouble(),
-          "Grasas": (macros["grasas"] ?? 0).toDouble(),
-        }, "Hoy", "diario");
-      },
-      child: SizedBox(
-        height: 260,
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            CustomPaint(
-              size: const Size(210, 210),
-              painter: PiePainter(
-                values: [desayuno, comida, cena],
-                colors: [Colors.orange, Colors.green, Colors.blue],
-              ),
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+      child: Row(
+        children: [
+          const Icon(Icons.local_fire_department,
+              color: Colors.white, size: 40),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(Icons.local_fire_department,
-                    color: Colors.red, size: 34),
-                Text("${total.toStringAsFixed(0)} kcal",
+                Text("Hola ${widget.nombre}",
                     style: const TextStyle(
-                        fontSize: 20, fontWeight: FontWeight.bold)),
+                        color: Colors.white,
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold)),
+                const Text("🔥 Seguimiento activo",
+                    style: TextStyle(color: Colors.white70)),
+                Text("IMC ${widget.imc.toStringAsFixed(1)}",
+                    style: const TextStyle(color: Colors.white)),
               ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
-  // ✅ FIX REAL: ahora muestra macros correctamente
-  Widget graficaSemanal(Map<String, dynamic> map) {
-    final dias = ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"];
-
-    final valores = dias.map((d) {
-      return (map[d] is Map)
-          ? (map[d]["cal"] ?? 0).toDouble()
-          : (map[d] ?? 0).toDouble();
-    }).toList();
-
-    final maxVal = valores.isEmpty
-        ? 1.0
-        : valores.reduce((a, b) => a > b ? a : b);
-
-    return SizedBox(
-      height: 260,
+  Widget caloriasCard() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.deepPurple,
+        borderRadius: BorderRadius.circular(22),
+      ),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: List.generate(dias.length, (i) {
-          final value = valores[i];
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Text("Calorías hoy",
+              style: TextStyle(color: Colors.white)),
+          Text(
+            caloriasHoy.toStringAsFixed(0),
+            style: const TextStyle(
+                color: Colors.white,
+                fontSize: 30,
+                fontWeight: FontWeight.bold),
+          )
+        ],
+      ),
+    );
+  }
 
-          return Expanded(
-            child: GestureDetector(
-              onTap: () async {
-                final macros = await DatabaseService.macrosSemanaStream().first;
+  Widget objetivoCard() {
+    final progreso = (caloriasHoy / metaCalorias).clamp(0, 1);
 
-                final data = macros[dias[i]] ?? {
-                  "cal": 0.0,
-                  "p": 0.0,
-                  "c": 0.0,
-                  "g": 0.0,
-                };
+    return cardWidget(
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text("Objetivo diario",
+              style: TextStyle(fontWeight: FontWeight.bold)),
+          const SizedBox(height: 12),
+          LinearProgressIndicator(
+            value: progreso.toDouble(),
+            minHeight: 14,
+            color: getPrimaryColor(),
+          ),
+          const SizedBox(height: 10),
+          Text(
+              "${caloriasHoy.toStringAsFixed(0)} / ${metaCalorias.toStringAsFixed(0)} kcal"),
+        ],
+      ),
+    );
+  }
 
-                mostrarDetalle({
-                  "Calorías": data["cal"],
-                  "Proteínas": data["p"],
-                  "Carbohidratos": data["c"],
-                  "Grasas": data["g"],
-                }, dias[i], "semanal");
-              },
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    height: maxVal == 0 ? 0 : (value / maxVal) * 200,
-                    width: 14,
-                    decoration: BoxDecoration(
-                      color: getPrimaryColor(),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(dias[i], style: const TextStyle(fontSize: 11)),
-                ],
-              ),
-            ),
-          );
-        }),
+  // 🔥 CARD MACROS
+  Widget macrosCard() {
+    return cardWidget(
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text("Macronutrientes",
+              style: TextStyle(fontWeight: FontWeight.bold)),
+          const SizedBox(height: 12),
+
+          macroProgress("Proteína", proteHoy, proteMeta, Colors.red),
+          macroProgress("Carbs", carbsHoy, carbsMeta, Colors.orange),
+          macroProgress("Grasas", grasasHoy, grasasMeta, Colors.blue),
+        ],
+      ),
+    );
+  }
+
+  Widget macroProgress(
+      String nombre, double actual, double meta, Color color) {
+
+    final progreso = meta == 0 ? 0 : (actual / meta).clamp(0, 1);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(nombre),
+              const Spacer(),
+              Text("${actual.toStringAsFixed(0)} / ${meta.toStringAsFixed(0)} g"),
+            ],
+          ),
+          const SizedBox(height: 6),
+          LinearProgressIndicator(
+            value: progreso.toDouble(),
+            minHeight: 10,
+            color: color,
+            backgroundColor: color.withOpacity(0.2),
+          ),
+        ],
       ),
     );
   }
@@ -300,14 +298,9 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           children: [
             buildHeader(),
-
-            cardWidget(Column(
-              children: [
-                const Text("Calorías hoy"),
-                Text("${caloriasHoy.toStringAsFixed(0)}",
-                    style: const TextStyle(fontSize: 34)),
-              ],
-            )),
+            caloriasCard(),
+            objetivoCard(),
+            macrosCard(),
 
             StreamBuilder<Map<String, dynamic>>(
               stream: DatabaseService.caloriasPorTipoStream(),
@@ -338,6 +331,67 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // 🔥 GRÁFICA LIMPIA (SIN MACROS)
+  Widget graficaDiariaPie(Map<String, dynamic> data) {
+    final desayuno = (data["Desayuno"] ?? 0).toDouble();
+    final comida = (data["Comida"] ?? 0).toDouble();
+    final cena = (data["Cena"] ?? 0).toDouble();
+
+    final total = desayuno + comida + cena;
+
+    return SizedBox(
+      height: 220,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          CustomPaint(
+            size: const Size(180, 180),
+            painter: PiePainter(
+              values: [desayuno, comida, cena],
+              colors: [Colors.orange, Colors.green, Colors.blue],
+            ),
+          ),
+          Text("${total.toStringAsFixed(0)} kcal"),
+        ],
+      ),
+    );
+  }
+
+  Widget graficaSemanal(Map<String, dynamic> map) {
+    final dias = ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"];
+
+    final valores = dias.map((d) {
+      return (map[d] is Map)
+          ? (map[d]["cal"] ?? 0).toDouble()
+          : (map[d] ?? 0).toDouble();
+    }).toList();
+
+    final maxVal = valores.isEmpty
+        ? 1.0
+        : valores.reduce((a, b) => a > b ? a : b);
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: List.generate(dias.length, (i) {
+        final value = valores[i];
+
+        return Expanded(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Container(
+                height: maxVal == 0 ? 0 : (value / maxVal) * 180,
+                width: 14,
+                color: getPrimaryColor(),
+              ),
+              Text(dias[i]),
+            ],
+          ),
+        );
+      }),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final screens = [
@@ -355,27 +409,7 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Text("Hola ${widget.nombre}"),
         backgroundColor: getPrimaryColor(),
       ),
-      body: Stack(
-        children: [
-          screens[_index],
-          if (detalleSeleccionado != null)
-            Positioned(
-              bottom: 120,
-              left: 20,
-              right: 20,
-              child: Material(
-                elevation: 10,
-                borderRadius: BorderRadius.circular(16),
-                child: Container(
-                  padding: const EdgeInsets.all(16),
-                  child: Text(
-                    "$diaSeleccionado\n$origenDetalle\n$detalleSeleccionado",
-                  ),
-                ),
-              ),
-            )
-        ],
-      ),
+      body: screens[_index],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _index,
         selectedItemColor: getPrimaryColor(),

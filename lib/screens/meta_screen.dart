@@ -4,6 +4,34 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'home_screen.dart';
 
+// 🔥 FUNCIÓN PARA CALCULAR MACROS
+Map<String, double> calcularMacros(double calorias, String objetivo) {
+  double p, c, g;
+
+  switch (objetivo) {
+    case "perder_peso":
+      p = 0.4;
+      c = 0.3;
+      g = 0.3;
+      break;
+    case "ganar_masa":
+      p = 0.3;
+      c = 0.5;
+      g = 0.2;
+      break;
+    default:
+      p = 0.3;
+      c = 0.4;
+      g = 0.3;
+  }
+
+  return {
+    "proteina": (calorias * p) / 4,
+    "carbs": (calorias * c) / 4,
+    "grasas": (calorias * g) / 9,
+  };
+}
+
 class MetaScreen extends StatelessWidget {
   const MetaScreen({super.key});
 
@@ -21,12 +49,20 @@ class MetaScreen extends StatelessWidget {
         caloriasMeta = 2600;
       }
 
+      // 🔥 CALCULAR MACROS AUTOMÁTICOS
+      final macros = calcularMacros(caloriasMeta, meta);
+
       await FirebaseFirestore.instance
           .collection('usuarios')
           .doc(user.uid)
           .update({
         'metaSeleccionada': meta,
         'caloriasMeta': caloriasMeta,
+
+        // 🔥 GUARDAR MACROS
+        'proteinaMeta': macros['proteina'],
+        'carbsMeta': macros['carbs'],
+        'grasasMeta': macros['grasas'],
       });
 
       final doc = await FirebaseFirestore.instance
@@ -63,6 +99,13 @@ class MetaScreen extends StatelessWidget {
             ],
           ),
           borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.green.withOpacity(0.3),
+              blurRadius: 10,
+              offset: const Offset(0, 5),
+            )
+          ],
         ),
         child: Row(
           children: [
@@ -99,6 +142,7 @@ class MetaScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Tu objetivo 🥗"),
         backgroundColor: Colors.green,
+        elevation: 0,
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -112,16 +156,31 @@ class MetaScreen extends StatelessWidget {
                 color: Colors.green,
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 25),
 
-            card(context, "Perder peso", "1800 kcal/día",
-                Icons.local_fire_department, "perder_peso"),
+            card(
+              context,
+              "Perder peso",
+              "1800 kcal/día",
+              Icons.local_fire_department,
+              "perder_peso",
+            ),
 
-            card(context, "Mantener peso", "2200 kcal/día",
-                Icons.balance, "mantener"),
+            card(
+              context,
+              "Mantener peso",
+              "2200 kcal/día",
+              Icons.balance,
+              "mantener",
+            ),
 
-            card(context, "Ganar masa muscular", "2600 kcal/día",
-                Icons.fitness_center, "ganar_masa"),
+            card(
+              context,
+              "Ganar masa muscular",
+              "2600 kcal/día",
+              Icons.fitness_center,
+              "ganar_masa",
+            ),
           ],
         ),
       ),

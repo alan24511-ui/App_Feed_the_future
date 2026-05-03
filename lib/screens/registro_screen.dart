@@ -185,3 +185,29 @@ class _RegistroScreenState extends State<RegistroScreen> {
     );
   }
 }
+Map<String, double> calcularMacros(double calorias, String objetivo) {
+  double p, c, g;
+
+  switch (objetivo) {
+    case "perder_peso":
+      p = 0.4;
+      c = 0.3;
+      g = 0.3;
+      break;
+    case "ganar_masa":
+      p = 0.3;
+      c = 0.5;
+      g = 0.2;
+      break;
+    default: // mantener
+      p = 0.3;
+      c = 0.4;
+      g = 0.3;
+  }
+
+  return {
+    "proteina": (calorias * p) / 4,
+    "carbs": (calorias * c) / 4,
+    "grasas": (calorias * g) / 9,
+  };
+}
