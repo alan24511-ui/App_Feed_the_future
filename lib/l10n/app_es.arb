@@ -1,0 +1,59 @@
+{
+  "@@locale": "es",
+
+  "perfil": "Perfil",
+  "ajustes": "Ajustes",
+  "cerrar_sesion": "Cerrar sesión",
+
+  "nombre": "Nombre",
+  "apellido": "Apellido",
+  "edad": "Edad",
+  "peso": "Peso",
+  "altura": "Altura",
+
+  "objetivo": "Objetivo",
+  "calorias": "Calorías",
+
+  "modoOscuro": "Modo oscuro",
+  "notificaciones": "Notificaciones",
+
+  "inicio": "Inicio",
+  "mascota": "Mascota",
+  "comida": "Comida",
+  "recetas": "Recetas",
+  "historial": "Historial",
+
+  "hola": "Hola",
+  "seguimiento": "Seguimiento activo",
+
+  "caloriasHoy": "Calorías hoy",
+  "objetivoDiario": "Objetivo diario",
+  "macronutrientes": "Macronutrientes",
+
+  "proteina": "Proteína",
+  "carbs": "Carbohidratos",
+  "grasas": "Grasas",
+
+  "graficaDiaria": "Gráfica diaria",
+  "graficaSemanal": "Gráfica semanal",
+
+  "meta_nutricional": "Meta nutricional",
+  "cambiar_objetivo": "Cambiar objetivo",
+
+  "guardar": "Guardar",
+  "cancelar": "Cancelar",
+  "eliminar": "Eliminar",
+
+  "acercaDe": "Acerca de",
+  "version": "Versión",
+
+  "restablecer": "Restablecer app",
+  "confirmar": "Confirmar",
+  "borrarAjustes": "Se borrarán ajustes locales",
+  "ajustesReiniciados": "Ajustes reiniciados",
+
+  "noUsuario": "No hay usuario",
+  "noComidas": "No registraste comidas 😅",
+
+  "idioma": "Idioma"
+}

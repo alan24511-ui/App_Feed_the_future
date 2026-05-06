@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'meta_screen.dart';
+
 class Perfil extends StatefulWidget {
   const Perfil({super.key});
 
@@ -62,7 +64,9 @@ class _PerfilState extends State<Perfil> {
       enabled: editando,
       decoration: InputDecoration(
         labelText: label,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
       ),
     );
   }
@@ -113,7 +117,8 @@ class _PerfilState extends State<Perfil> {
           }
 
           final data = snapshot.data!;
-          final meta = convertirMeta(data['metaSeleccionada'] ?? "mantener");
+          final meta =
+          convertirMeta(data['metaSeleccionada'] ?? "mantener");
           final calorias = data['caloriasMeta'] ?? 2200;
 
           return SingleChildScrollView(
@@ -134,13 +139,16 @@ class _PerfilState extends State<Perfil> {
                       const CircleAvatar(
                         radius: 40,
                         backgroundColor: Colors.green,
-                        child: Icon(Icons.person, size: 40, color: Colors.white),
+                        child: Icon(Icons.person,
+                            size: 40, color: Colors.white),
                       ),
                       const SizedBox(height: 10),
                       Text(
                         "${data['nombre']} ${data['apellido']}",
                         style: const TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       Text(user!.email ?? ""),
                     ],
@@ -149,7 +157,7 @@ class _PerfilState extends State<Perfil> {
 
                 const SizedBox(height: 20),
 
-                // CAMPOS EDITABLES
+                // CAMPOS
                 campo("Nombre", nombreCtrl),
                 const SizedBox(height: 10),
                 campo("Apellido", apellidoCtrl),
@@ -172,21 +180,29 @@ class _PerfilState extends State<Perfil> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text("Meta nutricional",
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-
+                      const Text(
+                        "Meta nutricional",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                       const SizedBox(height: 10),
-
                       Text("Objetivo: $meta"),
                       Text("Calorías: $calorias kcal"),
-
                       const SizedBox(height: 10),
 
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, '/meta');
+                          onPressed: () async {
+                            // 🔥 abre pantalla de meta
+                            await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const MetaScreen(),
+                              ),
+                            );
+
+                            // 🔥 refresca datos al volver
+                            setState(() {});
                           },
                           child: const Text("Cambiar objetivo"),
                         ),

@@ -113,6 +113,7 @@ class DatabaseService {
   // =================
   static Stream<Map<String, double>> caloriasSemanaStream() {
     return _comidasRef.snapshots().map((snapshot) {
+
       Map<String, double> data = {
         "Lun": 0.0,
         "Mar": 0.0,
@@ -123,9 +124,23 @@ class DatabaseService {
         "Dom": 0.0,
       };
 
+      final now = DateTime.now();
+
+      // 🔥 lunes de esta semana
+      final inicioSemana = now.subtract(Duration(days: now.weekday - 1));
+
+      // 🔥 domingo
+      final finSemana = inicioSemana.add(const Duration(days: 6));
+
       for (var doc in snapshot.docs) {
         final item = doc.data();
         final fecha = (item["fecha"] as Timestamp).toDate();
+
+        final estaSemana =
+            fecha.isAfter(inicioSemana.subtract(const Duration(days: 1))) &&
+                fecha.isBefore(finSemana.add(const Duration(days: 1)));
+
+        if (!estaSemana) continue;
 
         final dia = _dia(fecha.weekday);
         final calorias = (item["calorias"] ?? 0).toDouble();
@@ -138,6 +153,7 @@ class DatabaseService {
   }
   static Stream<Map<String, Map<String, double>>> macrosSemanaStream() {
     return _comidasRef.snapshots().map((snapshot) {
+
       Map<String, Map<String, double>> data = {
         "Lun": {"cal": 0, "p": 0, "c": 0, "g": 0},
         "Mar": {"cal": 0, "p": 0, "c": 0, "g": 0},
@@ -148,9 +164,20 @@ class DatabaseService {
         "Dom": {"cal": 0, "p": 0, "c": 0, "g": 0},
       };
 
+      final now = DateTime.now();
+      final inicioSemana = now.subtract(Duration(days: now.weekday - 1));
+      final finSemana = inicioSemana.add(const Duration(days: 6));
+
       for (var doc in snapshot.docs) {
         final item = doc.data();
         final fecha = (item["fecha"] as Timestamp).toDate();
+
+        final estaSemana =
+            fecha.isAfter(inicioSemana.subtract(const Duration(days: 1))) &&
+                fecha.isBefore(finSemana.add(const Duration(days: 1)));
+
+        if (!estaSemana) continue;
+
         final dia = _dia(fecha.weekday);
 
         data[dia]!["cal"] =
@@ -169,7 +196,6 @@ class DatabaseService {
       return data;
     });
   }
-
   static String _dia(int d) {
     switch (d) {
       case 1: return "Lun";

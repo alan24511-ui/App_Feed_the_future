@@ -13,6 +13,9 @@ import 'mascota.dart';
 import 'ajustes.dart';
 import 'historial_screen.dart';
 
+// 🔥 IMPORT LOCALIZATION
+import '../l10n/app_localizations.dart';
+
 class HomeScreen extends StatefulWidget {
   final String nombre;
   final double imc;
@@ -33,12 +36,10 @@ class _HomeScreenState extends State<HomeScreen> {
   String metaUsuario = "mantener";
   double metaCalorias = 2200;
 
-  // 🔥 METAS MACROS
   double proteMeta = 0;
   double carbsMeta = 0;
   double grasasMeta = 0;
 
-  // 🔥 CONSUMO HOY
   double proteHoy = 0;
   double carbsHoy = 0;
   double grasasHoy = 0;
@@ -63,7 +64,6 @@ class _HomeScreenState extends State<HomeScreen> {
       });
     });
 
-    // 🔥 ESCUCHAR MACROS
     _macrosSub = DatabaseService.macrosHoyStream().listen((macros) {
       if (!mounted) return;
 
@@ -119,7 +119,6 @@ class _HomeScreenState extends State<HomeScreen> {
       metaUsuario = data['metaSeleccionada'] ?? "mantener";
       metaCalorias = (data['caloriasMeta'] ?? 2200).toDouble();
 
-      // 🔥 SI NO EXISTEN EN FIREBASE → USA DEFAULTS
       proteMeta = (data['proteinaMeta'] ?? 150).toDouble();
       carbsMeta = (data['carbsMeta'] ?? 250).toDouble();
       grasasMeta = (data['grasasMeta'] ?? 70).toDouble();
@@ -157,6 +156,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget buildHeader() {
+    final t = AppLocalizations.of(context)!;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(20),
@@ -178,13 +179,13 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Hola ${widget.nombre}",
+                Text("${t.hola} ${widget.nombre}",
                     style: const TextStyle(
                         color: Colors.white,
                         fontSize: 22,
                         fontWeight: FontWeight.bold)),
-                const Text("🔥 Seguimiento activo",
-                    style: TextStyle(color: Colors.white70)),
+                Text("🔥 ${t.seguimiento}",
+                    style: const TextStyle(color: Colors.white70)),
                 Text("IMC ${widget.imc.toStringAsFixed(1)}",
                     style: const TextStyle(color: Colors.white)),
               ],
@@ -196,6 +197,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget caloriasCard() {
+    final t = AppLocalizations.of(context)!;
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -205,8 +208,8 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text("Calorías hoy",
-              style: TextStyle(color: Colors.white)),
+          Text(t.caloriasHoy,
+              style: const TextStyle(color: Colors.white)),
           Text(
             caloriasHoy.toStringAsFixed(0),
             style: const TextStyle(
@@ -220,14 +223,15 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget objetivoCard() {
+    final t = AppLocalizations.of(context)!;
     final progreso = (caloriasHoy / metaCalorias).clamp(0, 1);
 
     return cardWidget(
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text("Objetivo diario",
-              style: TextStyle(fontWeight: FontWeight.bold)),
+          Text(t.objetivoDiario,
+              style: const TextStyle(fontWeight: FontWeight.bold)),
           const SizedBox(height: 12),
           LinearProgressIndicator(
             value: progreso.toDouble(),
@@ -242,19 +246,20 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // 🔥 CARD MACROS
   Widget macrosCard() {
+    final t = AppLocalizations.of(context)!;
+
     return cardWidget(
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text("Macronutrientes",
-              style: TextStyle(fontWeight: FontWeight.bold)),
+          Text(t.macronutrientes,
+              style: const TextStyle(fontWeight: FontWeight.bold)),
           const SizedBox(height: 12),
 
-          macroProgress("Proteína", proteHoy, proteMeta, Colors.red),
+          macroProgress(t.proteina, proteHoy, proteMeta, Colors.red),
           macroProgress("Carbs", carbsHoy, carbsMeta, Colors.orange),
-          macroProgress("Grasas", grasasHoy, grasasMeta, Colors.blue),
+          macroProgress(t.grasas, grasasHoy, grasasMeta, Colors.blue),
         ],
       ),
     );
@@ -290,6 +295,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _homeContent() {
+    final t = AppLocalizations.of(context)!;
+
     verificarCambioDeDia();
 
     return SafeArea(
@@ -307,7 +314,7 @@ class _HomeScreenState extends State<HomeScreen> {
               builder: (context, snapshot) {
                 return cardWidget(Column(
                   children: [
-                    const Text("Gráfica diaria"),
+                    Text(t.graficaDiaria),
                     graficaDiariaPie(snapshot.data ?? {}),
                   ],
                 ));
@@ -319,7 +326,7 @@ class _HomeScreenState extends State<HomeScreen> {
               builder: (context, snapshot) {
                 return cardWidget(Column(
                   children: [
-                    const Text("Gráfica semanal"),
+                    Text(t.graficaSemanal),
                     graficaSemanal(snapshot.data ?? {}),
                   ],
                 ));
@@ -331,7 +338,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // 🔥 GRÁFICA LIMPIA (SIN MACROS)
   Widget graficaDiariaPie(Map<String, dynamic> data) {
     final desayuno = (data["Desayuno"] ?? 0).toDouble();
     final comida = (data["Comida"] ?? 0).toDouble();
@@ -394,6 +400,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+
     final screens = [
       _homeContent(),
       Mascota(calorias: caloriasHoy, meta: metaCalorias),
@@ -406,7 +414,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Hola ${widget.nombre}"),
+        title: Text("${t.hola} ${widget.nombre}"),
         backgroundColor: getPrimaryColor(),
       ),
       body: screens[_index],
@@ -415,14 +423,14 @@ class _HomeScreenState extends State<HomeScreen> {
         selectedItemColor: getPrimaryColor(),
         type: BottomNavigationBarType.fixed,
         onTap: (i) => setState(() => _index = i),
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Inicio"),
-          BottomNavigationBarItem(icon: Icon(Icons.pets), label: "Mascota"),
-          BottomNavigationBarItem(icon: Icon(Icons.fastfood), label: "Comida"),
-          BottomNavigationBarItem(icon: Icon(Icons.menu_book), label: "Recetas"),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Perfil"),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Ajustes"),
-          BottomNavigationBarItem(icon: Icon(Icons.history), label: "Historial"),
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: t.inicio),
+          BottomNavigationBarItem(icon: Icon(Icons.pets), label: t.mascota),
+          BottomNavigationBarItem(icon: Icon(Icons.fastfood), label: t.comida),
+          BottomNavigationBarItem(icon: Icon(Icons.menu_book), label: t.recetas),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: t.perfil),
+          BottomNavigationBarItem(icon: Icon(Icons.settings), label: t.ajustes),
+          BottomNavigationBarItem(icon: Icon(Icons.history), label: t.historial),
         ],
       ),
     );

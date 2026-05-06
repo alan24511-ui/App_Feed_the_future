@@ -1,0 +1,59 @@
+{
+  "@@locale": "en",
+
+  "perfil": "Profile",
+  "ajustes": "Settings",
+  "cerrar_sesion": "Log out",
+
+  "nombre": "Name",
+  "apellido": "Last name",
+  "edad": "Age",
+  "peso": "Weight",
+  "altura": "Height",
+
+  "objetivo": "Goal",
+  "calorias": "Calories",
+
+  "modoOscuro": "Dark mode",
+  "notificaciones": "Notifications",
+
+  "inicio": "Home",
+  "mascota": "Pet",
+  "comida": "Food",
+  "recetas": "Recipes",
+  "historial": "History",
+
+  "hola": "Hello",
+  "seguimiento": "Active tracking",
+
+  "caloriasHoy": "Calories today",
+  "objetivoDiario": "Daily goal",
+  "macronutrientes": "Macronutrients",
+
+  "proteina": "Protein",
+  "carbs": "Carbohydrates",
+  "grasas": "Fats",
+
+  "graficaDiaria": "Daily chart",
+  "graficaSemanal": "Weekly chart",
+
+  "meta_nutricional": "Nutrition goal",
+  "cambiar_objetivo": "Change goal",
+
+  "guardar": "Save",
+  "cancelar": "Cancel",
+  "eliminar": "Delete",
+
+  "acercaDe": "About",
+  "version": "Version",
+
+  "restablecer": "Reset app",
+  "confirmar": "Confirm",
+  "borrarAjustes": "Local settings will be deleted",
+  "ajustesReiniciados": "Settings reset",
+
+  "noUsuario": "No user found",
+  "noComidas": "No meals recorded 😅",
+
+  "idioma": "Language"
+}
