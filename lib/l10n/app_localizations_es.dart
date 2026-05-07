@@ -130,4 +130,247 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get idioma => 'Idioma';
+
+  @override
+  String get resumenNutricional => 'Resumen nutricional';
+
+  @override
+  String get registrarComida => 'Registrar comida';
+
+  @override
+  String get cantidadGramos => 'Cantidad en gramos';
+
+  @override
+  String get acompanantes => 'Acompañantes';
+
+  @override
+  String get bebida => 'Bebida';
+
+  @override
+  String get seleccionarBebida => 'Seleccionar bebida';
+
+  @override
+  String get guardarComida => 'Guardar comida';
+
+  @override
+  String get comidaGuardada => 'Comida guardada';
+
+  @override
+  String get porciones => 'Porciones';
+
+  @override
+  String get clasicoMexicano => 'Clásico mexicano';
+
+  @override
+  String get grandeCompleto => 'Grande y completo';
+
+  @override
+  String get tradicionalMexicano => 'Tradicional mexicano';
+
+  @override
+  String get caldoTipico => 'Caldo típico';
+
+  @override
+  String get saborIntenso => 'Sabor intenso';
+
+  @override
+  String get conQueso => 'Con queso';
+
+  @override
+  String get rellena => 'Rellena';
+
+  @override
+  String get desayunoMexicano => 'Desayuno mexicano';
+
+  @override
+  String get caldoTradicional => 'Caldo tradicional';
+
+  @override
+  String get conSalsa => 'Con salsa';
+
+  @override
+  String get altaProteina => 'Alta proteína';
+
+  @override
+  String get ricaProteina => 'Rica en proteína';
+
+  @override
+  String get jugosas => 'Jugosas';
+
+  @override
+  String get comidaRapida => 'Comida rápida';
+
+  @override
+  String get clasica => 'Clásica';
+
+  @override
+  String get fuenteEnergia => 'Fuente de energía';
+
+  @override
+  String get energia => 'Energía';
+
+  @override
+  String get crujientes => 'Crujientes';
+
+  @override
+  String get ligera => 'Ligera';
+
+  @override
+  String get grasasSaludables => 'Grasas saludables';
+
+  @override
+  String get fibra => 'Fibra';
+
+  @override
+  String get rapido => 'Rápido';
+
+  @override
+  String get clasico => 'Clásico';
+
+  @override
+  String get polloEmpanizado => 'Pollo empanizado';
+
+  @override
+  String get comidaJaponesa => 'Comida japonesa';
+
+  @override
+  String get rellenos => 'Rellenos';
+
+  @override
+  String get sopaAsiatica => 'Sopa asiática';
+
+  @override
+  String get dulce => 'Dulce';
+
+  @override
+  String get postre => 'Postre';
+
+  @override
+  String get tacosPastor => '🌮 Tacos al pastor';
+
+  @override
+  String get burrito => '🌯 Burrito';
+
+  @override
+  String get tamal => '🫔 Tamal';
+
+  @override
+  String get pozole => '🍲 Pozole';
+
+  @override
+  String get molePollo => '🍛 Mole con pollo';
+
+  @override
+  String get quesadilla => '🫓 Quesadilla';
+
+  @override
+  String get gordita => '🥙 Gordita';
+
+  @override
+  String get huevosRancheros => '🍳 Huevos rancheros';
+
+  @override
+  String get menudo => '🍲 Menudo';
+
+  @override
+  String get chilaquiles => '🥘 Chilaquiles';
+
+  @override
+  String get pechugaPollo => '🍗 Pechuga de pollo';
+
+  @override
+  String get carneAsada => '🥩 Carne asada';
+
+  @override
+  String get costillasBBQ => '🍖 Costillas BBQ';
+
+  @override
+  String get hamburguesa => '🍔 Hamburguesa';
+
+  @override
+  String get pizza => '🍕 Pizza';
+
+  @override
+  String get arroz => '🍚 Arroz';
+
+  @override
+  String get pasta => '🍝 Pasta';
+
+  @override
+  String get papasFritas => '🥔 Papas fritas';
+
+  @override
+  String get ensalada => '🥗 Ensalada';
+
+  @override
+  String get aguacate => '🥑 Aguacate';
+
+  @override
+  String get manzana => '🍎 Manzana';
+
+  @override
+  String get sandwich => '🥪 Sandwich';
+
+  @override
+  String get hotdog => '🌭 Hot Dog';
+
+  @override
+  String get nuggets => '🍗 Nuggets';
+
+  @override
+  String get sushi => '🍣 Sushi';
+
+  @override
+  String get dumplings => '🥟 Dumplings';
+
+  @override
+  String get ramen => '🍜 Ramen';
+
+  @override
+  String get dona => '🍩 Dona';
+
+  @override
+  String get chocolate => '🍫 Chocolate';
+
+  @override
+  String get pastel => '🍰 Pastel';
+
+  @override
+  String get ensaladaExtra => '🥗 Ensalada extra';
+
+  @override
+  String get pan => '🍞 Pan';
+
+  @override
+  String get queso => '🧀 Queso';
+
+  @override
+  String get papas => '🍟 Papas';
+
+  @override
+  String get agua => '💧 Agua';
+
+  @override
+  String get refresco => '🥤 Refresco';
+
+  @override
+  String get cafe => '☕ Café';
+
+  @override
+  String get leche => '🥛 Leche';
+
+  @override
+  String get jugo => '🧃 Jugo';
+
+  @override
+  String get costillasBbq => '🍖 Costillas BBQ';
+
+  @override
+  String get desayuno => 'Desayuno';
+
+  @override
+  String get cena => 'Cena';
+
+  @override
+  String get tipoComida => 'Tipo de comida';
 }

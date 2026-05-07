@@ -55,5 +55,104 @@
   "noUsuario": "No hay usuario",
   "noComidas": "No registraste comidas 😅",
 
-  "idioma": "Idioma"
+  "idioma": "Idioma",
+  "resumenNutricional": "Resumen nutricional",
+
+
+    "registrarComida": "Registrar comida",
+    "cantidadGramos": "Cantidad en gramos",
+    "acompanantes": "Acompañantes",
+    "bebida": "Bebida",
+    "seleccionarBebida": "Seleccionar bebida",
+    "guardarComida": "Guardar comida",
+    "comidaGuardada": "Comida guardada",
+    "porciones": "Porciones",
+
+    "clasicoMexicano": "Clásico mexicano",
+    "grandeCompleto": "Grande y completo",
+    "tradicionalMexicano": "Tradicional mexicano",
+    "caldoTipico": "Caldo típico",
+    "saborIntenso": "Sabor intenso",
+    "conQueso": "Con queso",
+    "rellena": "Rellena",
+    "desayunoMexicano": "Desayuno mexicano",
+    "caldoTradicional": "Caldo tradicional",
+    "conSalsa": "Con salsa",
+
+    "altaProteina": "Alta proteína",
+    "ricaProteina": "Rica en proteína",
+    "jugosas": "Jugosas",
+    "comidaRapida": "Comida rápida",
+    "clasica": "Clásica",
+
+    "fuenteEnergia": "Fuente de energía",
+    "energia": "Energía",
+    "crujientes": "Crujientes",
+
+    "ligera": "Ligera",
+    "grasasSaludables": "Grasas saludables",
+    "fibra": "Fibra",
+
+    "rapido": "Rápido",
+    "clasico": "Clásico",
+    "polloEmpanizado": "Pollo empanizado",
+
+    "comidaJaponesa": "Comida japonesa",
+    "rellenos": "Rellenos",
+    "sopaAsiatica": "Sopa asiática",
+
+    "dulce": "Dulce",
+    "postre": "Postre",
+
+    "tacosPastor": "🌮 Tacos al pastor",
+    "burrito": "🌯 Burrito",
+    "tamal": "🫔 Tamal",
+    "pozole": "🍲 Pozole",
+    "molePollo": "🍛 Mole con pollo",
+    "quesadilla": "🫓 Quesadilla",
+    "gordita": "🥙 Gordita",
+    "huevosRancheros": "🍳 Huevos rancheros",
+    "menudo": "🍲 Menudo",
+    "chilaquiles": "🥘 Chilaquiles",
+
+    "pechugaPollo": "🍗 Pechuga de pollo",
+    "carneAsada": "🥩 Carne asada",
+    "costillasBBQ": "🍖 Costillas BBQ",
+    "hamburguesa": "🍔 Hamburguesa",
+    "pizza": "🍕 Pizza",
+
+    "arroz": "🍚 Arroz",
+    "pasta": "🍝 Pasta",
+    "papasFritas": "🥔 Papas fritas",
+
+    "ensalada": "🥗 Ensalada",
+    "aguacate": "🥑 Aguacate",
+    "manzana": "🍎 Manzana",
+
+    "sandwich": "🥪 Sandwich",
+    "hotdog": "🌭 Hot Dog",
+    "nuggets": "🍗 Nuggets",
+
+    "sushi": "🍣 Sushi",
+    "dumplings": "🥟 Dumplings",
+    "ramen": "🍜 Ramen",
+
+    "dona": "🍩 Dona",
+    "chocolate": "🍫 Chocolate",
+    "pastel": "🍰 Pastel",
+
+    "ensaladaExtra": "🥗 Ensalada extra",
+    "pan": "🍞 Pan",
+    "queso": "🧀 Queso",
+    "papas": "🍟 Papas",
+
+    "agua": "💧 Agua",
+    "refresco": "🥤 Refresco",
+    "cafe": "☕ Café",
+    "leche": "🥛 Leche",
+    "jugo": "🧃 Jugo",
+    "costillasBbq": "🍖 Costillas BBQ",
+    "desayuno": "Desayuno",
+    "cena": "Cena",
+    "tipoComida": "Tipo de comida"
 }

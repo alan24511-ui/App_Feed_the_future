@@ -340,6 +340,492 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Language'**
   String get idioma;
+
+  /// No description provided for @resumenNutricional.
+  ///
+  /// In en, this message translates to:
+  /// **'Nutrition summary'**
+  String get resumenNutricional;
+
+  /// No description provided for @registrarComida.
+  ///
+  /// In en, this message translates to:
+  /// **'Register meal'**
+  String get registrarComida;
+
+  /// No description provided for @cantidadGramos.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount in grams'**
+  String get cantidadGramos;
+
+  /// No description provided for @acompanantes.
+  ///
+  /// In en, this message translates to:
+  /// **'Side dishes'**
+  String get acompanantes;
+
+  /// No description provided for @bebida.
+  ///
+  /// In en, this message translates to:
+  /// **'Drink'**
+  String get bebida;
+
+  /// No description provided for @seleccionarBebida.
+  ///
+  /// In en, this message translates to:
+  /// **'Select drink'**
+  String get seleccionarBebida;
+
+  /// No description provided for @guardarComida.
+  ///
+  /// In en, this message translates to:
+  /// **'Save meal'**
+  String get guardarComida;
+
+  /// No description provided for @comidaGuardada.
+  ///
+  /// In en, this message translates to:
+  /// **'Meal saved'**
+  String get comidaGuardada;
+
+  /// No description provided for @porciones.
+  ///
+  /// In en, this message translates to:
+  /// **'Servings'**
+  String get porciones;
+
+  /// No description provided for @clasicoMexicano.
+  ///
+  /// In en, this message translates to:
+  /// **'Classic Mexican'**
+  String get clasicoMexicano;
+
+  /// No description provided for @grandeCompleto.
+  ///
+  /// In en, this message translates to:
+  /// **'Large and complete'**
+  String get grandeCompleto;
+
+  /// No description provided for @tradicionalMexicano.
+  ///
+  /// In en, this message translates to:
+  /// **'Traditional Mexican'**
+  String get tradicionalMexicano;
+
+  /// No description provided for @caldoTipico.
+  ///
+  /// In en, this message translates to:
+  /// **'Traditional soup'**
+  String get caldoTipico;
+
+  /// No description provided for @saborIntenso.
+  ///
+  /// In en, this message translates to:
+  /// **'Strong flavor'**
+  String get saborIntenso;
+
+  /// No description provided for @conQueso.
+  ///
+  /// In en, this message translates to:
+  /// **'With cheese'**
+  String get conQueso;
+
+  /// No description provided for @rellena.
+  ///
+  /// In en, this message translates to:
+  /// **'Stuffed'**
+  String get rellena;
+
+  /// No description provided for @desayunoMexicano.
+  ///
+  /// In en, this message translates to:
+  /// **'Mexican breakfast'**
+  String get desayunoMexicano;
+
+  /// No description provided for @caldoTradicional.
+  ///
+  /// In en, this message translates to:
+  /// **'Traditional broth'**
+  String get caldoTradicional;
+
+  /// No description provided for @conSalsa.
+  ///
+  /// In en, this message translates to:
+  /// **'With sauce'**
+  String get conSalsa;
+
+  /// No description provided for @altaProteina.
+  ///
+  /// In en, this message translates to:
+  /// **'High protein'**
+  String get altaProteina;
+
+  /// No description provided for @ricaProteina.
+  ///
+  /// In en, this message translates to:
+  /// **'Rich in protein'**
+  String get ricaProteina;
+
+  /// No description provided for @jugosas.
+  ///
+  /// In en, this message translates to:
+  /// **'Juicy'**
+  String get jugosas;
+
+  /// No description provided for @comidaRapida.
+  ///
+  /// In en, this message translates to:
+  /// **'Fast food'**
+  String get comidaRapida;
+
+  /// No description provided for @clasica.
+  ///
+  /// In en, this message translates to:
+  /// **'Classic'**
+  String get clasica;
+
+  /// No description provided for @fuenteEnergia.
+  ///
+  /// In en, this message translates to:
+  /// **'Energy source'**
+  String get fuenteEnergia;
+
+  /// No description provided for @energia.
+  ///
+  /// In en, this message translates to:
+  /// **'Energy'**
+  String get energia;
+
+  /// No description provided for @crujientes.
+  ///
+  /// In en, this message translates to:
+  /// **'Crunchy'**
+  String get crujientes;
+
+  /// No description provided for @ligera.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get ligera;
+
+  /// No description provided for @grasasSaludables.
+  ///
+  /// In en, this message translates to:
+  /// **'Healthy fats'**
+  String get grasasSaludables;
+
+  /// No description provided for @fibra.
+  ///
+  /// In en, this message translates to:
+  /// **'Fiber'**
+  String get fibra;
+
+  /// No description provided for @rapido.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick'**
+  String get rapido;
+
+  /// No description provided for @clasico.
+  ///
+  /// In en, this message translates to:
+  /// **'Classic'**
+  String get clasico;
+
+  /// No description provided for @polloEmpanizado.
+  ///
+  /// In en, this message translates to:
+  /// **'Breaded chicken'**
+  String get polloEmpanizado;
+
+  /// No description provided for @comidaJaponesa.
+  ///
+  /// In en, this message translates to:
+  /// **'Japanese food'**
+  String get comidaJaponesa;
+
+  /// No description provided for @rellenos.
+  ///
+  /// In en, this message translates to:
+  /// **'Stuffed'**
+  String get rellenos;
+
+  /// No description provided for @sopaAsiatica.
+  ///
+  /// In en, this message translates to:
+  /// **'Asian soup'**
+  String get sopaAsiatica;
+
+  /// No description provided for @dulce.
+  ///
+  /// In en, this message translates to:
+  /// **'Sweet'**
+  String get dulce;
+
+  /// No description provided for @postre.
+  ///
+  /// In en, this message translates to:
+  /// **'Dessert'**
+  String get postre;
+
+  /// No description provided for @tacosPastor.
+  ///
+  /// In en, this message translates to:
+  /// **'🌮 Tacos al pastor'**
+  String get tacosPastor;
+
+  /// No description provided for @burrito.
+  ///
+  /// In en, this message translates to:
+  /// **'🌯 Burrito'**
+  String get burrito;
+
+  /// No description provided for @tamal.
+  ///
+  /// In en, this message translates to:
+  /// **'🫔 Tamale'**
+  String get tamal;
+
+  /// No description provided for @pozole.
+  ///
+  /// In en, this message translates to:
+  /// **'🍲 Pozole'**
+  String get pozole;
+
+  /// No description provided for @molePollo.
+  ///
+  /// In en, this message translates to:
+  /// **'🍛 Chicken mole'**
+  String get molePollo;
+
+  /// No description provided for @quesadilla.
+  ///
+  /// In en, this message translates to:
+  /// **'🫓 Quesadilla'**
+  String get quesadilla;
+
+  /// No description provided for @gordita.
+  ///
+  /// In en, this message translates to:
+  /// **'🥙 Gordita'**
+  String get gordita;
+
+  /// No description provided for @huevosRancheros.
+  ///
+  /// In en, this message translates to:
+  /// **'🍳 Huevos rancheros'**
+  String get huevosRancheros;
+
+  /// No description provided for @menudo.
+  ///
+  /// In en, this message translates to:
+  /// **'🍲 Menudo'**
+  String get menudo;
+
+  /// No description provided for @chilaquiles.
+  ///
+  /// In en, this message translates to:
+  /// **'🥘 Chilaquiles'**
+  String get chilaquiles;
+
+  /// No description provided for @pechugaPollo.
+  ///
+  /// In en, this message translates to:
+  /// **'🍗 Chicken breast'**
+  String get pechugaPollo;
+
+  /// No description provided for @carneAsada.
+  ///
+  /// In en, this message translates to:
+  /// **'🥩 Grilled meat'**
+  String get carneAsada;
+
+  /// No description provided for @costillasBBQ.
+  ///
+  /// In en, this message translates to:
+  /// **'🍖 BBQ ribs'**
+  String get costillasBBQ;
+
+  /// No description provided for @hamburguesa.
+  ///
+  /// In en, this message translates to:
+  /// **'🍔 Hamburger'**
+  String get hamburguesa;
+
+  /// No description provided for @pizza.
+  ///
+  /// In en, this message translates to:
+  /// **'🍕 Pizza'**
+  String get pizza;
+
+  /// No description provided for @arroz.
+  ///
+  /// In en, this message translates to:
+  /// **'🍚 Rice'**
+  String get arroz;
+
+  /// No description provided for @pasta.
+  ///
+  /// In en, this message translates to:
+  /// **'🍝 Pasta'**
+  String get pasta;
+
+  /// No description provided for @papasFritas.
+  ///
+  /// In en, this message translates to:
+  /// **'🥔 French fries'**
+  String get papasFritas;
+
+  /// No description provided for @ensalada.
+  ///
+  /// In en, this message translates to:
+  /// **'🥗 Salad'**
+  String get ensalada;
+
+  /// No description provided for @aguacate.
+  ///
+  /// In en, this message translates to:
+  /// **'🥑 Avocado'**
+  String get aguacate;
+
+  /// No description provided for @manzana.
+  ///
+  /// In en, this message translates to:
+  /// **'🍎 Apple'**
+  String get manzana;
+
+  /// No description provided for @sandwich.
+  ///
+  /// In en, this message translates to:
+  /// **'🥪 Sandwich'**
+  String get sandwich;
+
+  /// No description provided for @hotdog.
+  ///
+  /// In en, this message translates to:
+  /// **'🌭 Hot Dog'**
+  String get hotdog;
+
+  /// No description provided for @nuggets.
+  ///
+  /// In en, this message translates to:
+  /// **'🍗 Nuggets'**
+  String get nuggets;
+
+  /// No description provided for @sushi.
+  ///
+  /// In en, this message translates to:
+  /// **'🍣 Sushi'**
+  String get sushi;
+
+  /// No description provided for @dumplings.
+  ///
+  /// In en, this message translates to:
+  /// **'🥟 Dumplings'**
+  String get dumplings;
+
+  /// No description provided for @ramen.
+  ///
+  /// In en, this message translates to:
+  /// **'🍜 Ramen'**
+  String get ramen;
+
+  /// No description provided for @dona.
+  ///
+  /// In en, this message translates to:
+  /// **'🍩 Donut'**
+  String get dona;
+
+  /// No description provided for @chocolate.
+  ///
+  /// In en, this message translates to:
+  /// **'🍫 Chocolate'**
+  String get chocolate;
+
+  /// No description provided for @pastel.
+  ///
+  /// In en, this message translates to:
+  /// **'🍰 Cake'**
+  String get pastel;
+
+  /// No description provided for @ensaladaExtra.
+  ///
+  /// In en, this message translates to:
+  /// **'🥗 Extra salad'**
+  String get ensaladaExtra;
+
+  /// No description provided for @pan.
+  ///
+  /// In en, this message translates to:
+  /// **'🍞 Bread'**
+  String get pan;
+
+  /// No description provided for @queso.
+  ///
+  /// In en, this message translates to:
+  /// **'🧀 Cheese'**
+  String get queso;
+
+  /// No description provided for @papas.
+  ///
+  /// In en, this message translates to:
+  /// **'🍟 Fries'**
+  String get papas;
+
+  /// No description provided for @agua.
+  ///
+  /// In en, this message translates to:
+  /// **'💧 Water'**
+  String get agua;
+
+  /// No description provided for @refresco.
+  ///
+  /// In en, this message translates to:
+  /// **'🥤 Soda'**
+  String get refresco;
+
+  /// No description provided for @cafe.
+  ///
+  /// In en, this message translates to:
+  /// **'☕ Coffee'**
+  String get cafe;
+
+  /// No description provided for @leche.
+  ///
+  /// In en, this message translates to:
+  /// **'🥛 Milk'**
+  String get leche;
+
+  /// No description provided for @jugo.
+  ///
+  /// In en, this message translates to:
+  /// **'🧃 Juice'**
+  String get jugo;
+
+  /// No description provided for @costillasBbq.
+  ///
+  /// In en, this message translates to:
+  /// **'🍖 BBQ Ribs'**
+  String get costillasBbq;
+
+  /// No description provided for @desayuno.
+  ///
+  /// In en, this message translates to:
+  /// **'Breakfast'**
+  String get desayuno;
+
+  /// No description provided for @cena.
+  ///
+  /// In en, this message translates to:
+  /// **'Dinner'**
+  String get cena;
+
+  /// No description provided for @tipoComida.
+  ///
+  /// In en, this message translates to:
+  /// **'Meal type'**
+  String get tipoComida;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

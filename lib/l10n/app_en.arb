@@ -55,5 +55,104 @@
   "noUsuario": "No user found",
   "noComidas": "No meals recorded 😅",
 
-  "idioma": "Language"
+  "idioma": "Language",
+  "resumenNutricional": "Nutrition summary",
+
+
+    "registrarComida": "Register meal",
+    "cantidadGramos": "Amount in grams",
+    "acompanantes": "Side dishes",
+    "bebida": "Drink",
+    "seleccionarBebida": "Select drink",
+    "guardarComida": "Save meal",
+    "comidaGuardada": "Meal saved",
+    "porciones": "Servings",
+
+    "clasicoMexicano": "Classic Mexican",
+    "grandeCompleto": "Large and complete",
+    "tradicionalMexicano": "Traditional Mexican",
+    "caldoTipico": "Traditional soup",
+    "saborIntenso": "Strong flavor",
+    "conQueso": "With cheese",
+    "rellena": "Stuffed",
+    "desayunoMexicano": "Mexican breakfast",
+    "caldoTradicional": "Traditional broth",
+    "conSalsa": "With sauce",
+
+    "altaProteina": "High protein",
+    "ricaProteina": "Rich in protein",
+    "jugosas": "Juicy",
+    "comidaRapida": "Fast food",
+    "clasica": "Classic",
+
+    "fuenteEnergia": "Energy source",
+    "energia": "Energy",
+    "crujientes": "Crunchy",
+
+    "ligera": "Light",
+    "grasasSaludables": "Healthy fats",
+    "fibra": "Fiber",
+
+    "rapido": "Quick",
+    "clasico": "Classic",
+    "polloEmpanizado": "Breaded chicken",
+
+    "comidaJaponesa": "Japanese food",
+    "rellenos": "Stuffed",
+    "sopaAsiatica": "Asian soup",
+
+    "dulce": "Sweet",
+    "postre": "Dessert",
+
+    "tacosPastor": "🌮 Tacos al pastor",
+    "burrito": "🌯 Burrito",
+    "tamal": "🫔 Tamale",
+    "pozole": "🍲 Pozole",
+    "molePollo": "🍛 Chicken mole",
+    "quesadilla": "🫓 Quesadilla",
+    "gordita": "🥙 Gordita",
+    "huevosRancheros": "🍳 Huevos rancheros",
+    "menudo": "🍲 Menudo",
+    "chilaquiles": "🥘 Chilaquiles",
+
+    "pechugaPollo": "🍗 Chicken breast",
+    "carneAsada": "🥩 Grilled meat",
+    "costillasBBQ": "🍖 BBQ ribs",
+    "hamburguesa": "🍔 Hamburger",
+    "pizza": "🍕 Pizza",
+
+    "arroz": "🍚 Rice",
+    "pasta": "🍝 Pasta",
+    "papasFritas": "🥔 French fries",
+
+    "ensalada": "🥗 Salad",
+    "aguacate": "🥑 Avocado",
+    "manzana": "🍎 Apple",
+
+    "sandwich": "🥪 Sandwich",
+    "hotdog": "🌭 Hot Dog",
+    "nuggets": "🍗 Nuggets",
+
+    "sushi": "🍣 Sushi",
+    "dumplings": "🥟 Dumplings",
+    "ramen": "🍜 Ramen",
+
+    "dona": "🍩 Donut",
+    "chocolate": "🍫 Chocolate",
+    "pastel": "🍰 Cake",
+
+    "ensaladaExtra": "🥗 Extra salad",
+    "pan": "🍞 Bread",
+    "queso": "🧀 Cheese",
+    "papas": "🍟 Fries",
+
+    "agua": "💧 Water",
+    "refresco": "🥤 Soda",
+    "cafe": "☕ Coffee",
+    "leche": "🥛 Milk",
+    "jugo": "🧃 Juice",
+    "costillasBbq": "🍖 BBQ Ribs",
+    "desayuno": "Breakfast",
+    "cena": "Dinner",
+    "tipoComida": "Meal type"
 }
