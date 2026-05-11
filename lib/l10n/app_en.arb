@@ -173,11 +173,17 @@
     "cocina": "Cook until bubbles appear and turn over.",
     "lado": "Cook the other side until golden brown",
     "sirve": "Serve hot",
-
+    "omellete": "🍳 Mushroom and cheese omelet",
+    "desayuno": "High-protein breakfast",
+    "huevos": "2 eggs",
+    "champiñones": "1/2 cup of sliced mushrooms",
+    "queso": "30g of panela cheese",
+    "aceite": "1 teaspoon of oil",
     "bate": "Beat the eggs in a bowl",
     "calienta": "Heat the oil in a frying pan",
     "agrega": "Add the mushrooms and cook for 3 minutes",
     "vierte": "Pour in the eggs",
     "añade": "Add the cheese on top",
-    "dobla": ""
+    "dobla": "Fold the omelet and cook for 2 more minutes",
+    "caliente": "Serve hot",
 }
