@@ -84,8 +84,7 @@ class Recetas extends StatelessWidget {
             "Cocina el huevo al gusto\n"
             "Machaca el aguacate con sal y pimienta\n"
             "Unta el aguacate en el pan\n"
-            "Agrega el huevo\n"
-            "Cierra el sándwich y sirve",
+            "Agrega el huevo\n",
         "cal": 300
       },
 
