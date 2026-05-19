@@ -641,9 +641,12 @@ class _RegistrarComidaState extends State<RegistrarComida> {
   Widget build(BuildContext context) {
 
     final t = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: isDark
+          ? const Color(0xFF121212)
+          : Colors.grey[100],
 
       appBar: AppBar(
         title: Text(t.registrarComida),
@@ -664,7 +667,9 @@ class _RegistrarComidaState extends State<RegistrarComida> {
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withOpacity(
+                    isDark ? 0.25 : 0.05,
+                  ),
                   blurRadius: 10,
                 )
               ],
@@ -672,6 +677,10 @@ class _RegistrarComidaState extends State<RegistrarComida> {
 
             child: Card(
               elevation: 0,
+              color: isDark
+                  ? const Color(0xFF1E1E1E)
+                  : Colors.white,
+
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
@@ -681,9 +690,10 @@ class _RegistrarComidaState extends State<RegistrarComida> {
 
                 title: Text(
                   "${comida["emoji"]} ${traducirTexto(t, comida["nombre"])}",
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
+                    color: isDark ? Colors.white : Colors.black,
                   ),
                 ),
 
@@ -691,10 +701,20 @@ class _RegistrarComidaState extends State<RegistrarComida> {
                   padding: const EdgeInsets.only(top: 5),
                   child: Text(
                     traducirTexto(t, comida["desc"]),
+                    style: TextStyle(
+                      color: isDark
+                          ? Colors.white70
+                          : Colors.black54,
+                    ),
                   ),
                 ),
 
-                trailing: const Icon(Icons.arrow_forward_ios_rounded),
+                trailing: Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  color: isDark
+                      ? Colors.white70
+                      : Colors.black54,
+                ),
 
                 onTap: () => abrirDetalle(comida),
               ),
@@ -708,6 +728,7 @@ class _RegistrarComidaState extends State<RegistrarComida> {
   Widget detalleComida() {
 
     final t = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return StatefulBuilder(
       builder: (context, setModalState) {
@@ -715,9 +736,12 @@ class _RegistrarComidaState extends State<RegistrarComida> {
         double total = calcularCalorias();
 
         return Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(
+          decoration: BoxDecoration(
+            color: isDark
+                ? const Color(0xFF1E1E1E)
+                : Colors.white,
+
+            borderRadius: const BorderRadius.vertical(
               top: Radius.circular(30),
             ),
           ),
@@ -740,7 +764,7 @@ class _RegistrarComidaState extends State<RegistrarComida> {
                         width: 60,
                         height: 6,
                         decoration: BoxDecoration(
-                          color: Colors.grey.shade300,
+                          color: Colors.grey.shade400,
                           borderRadius: BorderRadius.circular(20),
                         ),
                       ),
@@ -750,9 +774,13 @@ class _RegistrarComidaState extends State<RegistrarComida> {
 
                     Text(
                       "${comidaSeleccionada!["emoji"]} ${traducirTexto(t, comidaSeleccionada!["nombre"])}",
-                      style: const TextStyle(
+
+                      style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
+                        color: isDark
+                            ? Colors.white
+                            : Colors.black,
                       ),
                     ),
 
@@ -760,18 +788,38 @@ class _RegistrarComidaState extends State<RegistrarComida> {
 
                     Text(
                       traducirTexto(t, comidaSeleccionada!["desc"]),
+
                       style: TextStyle(
-                        color: Colors.grey[700],
+                        color: isDark
+                            ? Colors.white70
+                            : Colors.grey[700],
                       ),
                     ),
 
                     const SizedBox(height: 25),
 
                     DropdownButtonFormField<String>(
+                      dropdownColor: isDark
+                          ? const Color(0xFF2A2A2A)
+                          : Colors.white,
+
                       value: tipoComida,
+
+                      style: TextStyle(
+                        color: isDark
+                            ? Colors.white
+                            : Colors.black,
+                      ),
 
                       decoration: InputDecoration(
                         labelText: t.tipoComida,
+
+                        labelStyle: TextStyle(
+                          color: isDark
+                              ? Colors.white70
+                              : Colors.black54,
+                        ),
+
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(16),
                         ),
@@ -794,8 +842,12 @@ class _RegistrarComidaState extends State<RegistrarComida> {
 
                     Text(
                       "${t.cantidadGramos}: $gramos g",
-                      style: const TextStyle(
+
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
+                        color: isDark
+                            ? Colors.white
+                            : Colors.black,
                       ),
                     ),
 
@@ -829,9 +881,13 @@ class _RegistrarComidaState extends State<RegistrarComida> {
 
                         Text(
                           "$porciones",
-                          style: const TextStyle(
+
+                          style: TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
+                            color: isDark
+                                ? Colors.white
+                                : Colors.black,
                           ),
                         ),
 
@@ -852,9 +908,13 @@ class _RegistrarComidaState extends State<RegistrarComida> {
 
                     Text(
                       t.acompanantes,
-                      style: const TextStyle(
+
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
+                        color: isDark
+                            ? Colors.white
+                            : Colors.black,
                       ),
                     ),
 
@@ -870,6 +930,18 @@ class _RegistrarComidaState extends State<RegistrarComida> {
                         acompanantesSeleccionados.contains(a["nombre"]);
 
                         return FilterChip(
+                          backgroundColor: isDark
+                              ? const Color(0xFF2A2A2A)
+                              : Colors.grey.shade200,
+
+                          selectedColor: Colors.blue.withOpacity(0.25),
+
+                          labelStyle: TextStyle(
+                            color: isDark
+                                ? Colors.white
+                                : Colors.black,
+                          ),
+
                           label: Text(
                             "${a["emoji"]} ${traducirTexto(t, a["nombre"])}",
                           ),
@@ -895,10 +967,27 @@ class _RegistrarComidaState extends State<RegistrarComida> {
                     const SizedBox(height: 25),
 
                     DropdownButtonFormField<String>(
+                      dropdownColor: isDark
+                          ? const Color(0xFF2A2A2A)
+                          : Colors.white,
+
                       value: bebidaSeleccionada,
+
+                      style: TextStyle(
+                        color: isDark
+                            ? Colors.white
+                            : Colors.black,
+                      ),
 
                       decoration: InputDecoration(
                         labelText: t.bebida,
+
+                        labelStyle: TextStyle(
+                          color: isDark
+                              ? Colors.white70
+                              : Colors.black54,
+                        ),
+
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(16),
                         ),
@@ -925,11 +1014,13 @@ class _RegistrarComidaState extends State<RegistrarComida> {
                     Card(
                       elevation: 0,
 
+                      color: isDark
+                          ? Colors.blue.withOpacity(0.15)
+                          : Colors.blue.withOpacity(0.08),
+
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
-
-                      color: Colors.blue.withOpacity(0.08),
 
                       child: Padding(
                         padding: const EdgeInsets.all(18),
@@ -939,9 +1030,13 @@ class _RegistrarComidaState extends State<RegistrarComida> {
 
                             Text(
                               "🔥 ${total.toStringAsFixed(1)} kcal",
-                              style: const TextStyle(
+
+                              style: TextStyle(
                                 fontSize: 22,
                                 fontWeight: FontWeight.bold,
+                                color: isDark
+                                    ? Colors.white
+                                    : Colors.black,
                               ),
                             ),
 
@@ -949,14 +1044,32 @@ class _RegistrarComidaState extends State<RegistrarComida> {
 
                             Text(
                               "💪 ${calcularProteinas().toStringAsFixed(1)} g ${t.proteina}",
+
+                              style: TextStyle(
+                                color: isDark
+                                    ? Colors.white
+                                    : Colors.black,
+                              ),
                             ),
 
                             Text(
                               "🍞 ${calcularCarbs().toStringAsFixed(1)} g ${t.carbs}",
+
+                              style: TextStyle(
+                                color: isDark
+                                    ? Colors.white
+                                    : Colors.black,
+                              ),
                             ),
 
                             Text(
                               "🥑 ${calcularGrasas().toStringAsFixed(1)} g ${t.grasas}",
+
+                              style: TextStyle(
+                                color: isDark
+                                    ? Colors.white
+                                    : Colors.black,
+                              ),
                             ),
                           ],
                         ),

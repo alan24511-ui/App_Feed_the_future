@@ -373,4 +373,67 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get tipoComida => 'Tipo de comida';
+
+  @override
+  String get recomendaciones => 'Recomendaciones diarias';
+
+  @override
+  String get recomendacionProteina => 'Te falta proteína hoy. Prueba agregar pollo, huevos o atún.';
+
+  @override
+  String get recomendacionCarbs => 'Tus carbohidratos están bajos. Puedes añadir arroz, avena o pasta.';
+
+  @override
+  String get recomendacionGrasas => 'Necesitas más grasas saludables. Intenta agregar aguacate o nueces.';
+
+  @override
+  String get recomendacionCaloriasAltas => 'Has consumido muchas calorías hoy. Considera una cena ligera.';
+
+  @override
+  String get recomendacionBalanceada => '¡Buen trabajo! Tu alimentación de hoy se ve balanceada.';
+
+  @override
+  String get consejoNutricional => 'Consejo nutricional';
+
+  @override
+  String get desayunoRecordatorio => 'Hora de registrar tu desayuno 🍳';
+
+  @override
+  String get desayunoMensaje => 'Registrar tu desayuno ayuda a mantener tu seguimiento nutricional.';
+
+  @override
+  String get comidaRecordatorio => 'Hora de registrar tu comida 🍛';
+
+  @override
+  String get comidaMensaje => 'No olvides registrar tu comida para mantener tus estadísticas actualizadas.';
+
+  @override
+  String get cenaRecordatorio => 'Hora de registrar tu cena 🌙';
+
+  @override
+  String get cenaMensaje => 'Registrar tu cena ayuda a completar tu progreso diario.';
+
+  @override
+  String get metaProteina => 'Meta de proteína';
+
+  @override
+  String get metaCarbs => 'Meta de carbohidratos';
+
+  @override
+  String get metaGrasas => 'Meta de grasas';
+
+  @override
+  String get balanceNutricional => 'Balance nutricional';
+
+  @override
+  String get sugerenciaDelDia => 'Sugerencia del día';
+
+  @override
+  String get consumoElevado => 'Consumo elevado';
+
+  @override
+  String get consumoBajo => 'Consumo bajo';
+
+  @override
+  String get excelenteBalance => 'Excelente balance';
 }

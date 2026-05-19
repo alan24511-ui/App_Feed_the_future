@@ -373,4 +373,67 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tipoComida => 'Meal type';
+
+  @override
+  String get recomendaciones => 'Daily recommendations';
+
+  @override
+  String get recomendacionProteina => 'You need more protein today. Try adding chicken, eggs or tuna.';
+
+  @override
+  String get recomendacionCarbs => 'Your carbs are low. You can add rice, oats or pasta.';
+
+  @override
+  String get recomendacionGrasas => 'You need more healthy fats. Try adding avocado or nuts.';
+
+  @override
+  String get recomendacionCaloriasAltas => 'You consumed many calories today. Consider a lighter dinner.';
+
+  @override
+  String get recomendacionBalanceada => 'Great job! Your nutrition today looks balanced.';
+
+  @override
+  String get consejoNutricional => 'Nutrition tip';
+
+  @override
+  String get desayunoRecordatorio => 'Time to log your breakfast 🍳';
+
+  @override
+  String get desayunoMensaje => 'Logging breakfast helps maintain your nutrition tracking.';
+
+  @override
+  String get comidaRecordatorio => 'Time to log your lunch 🍛';
+
+  @override
+  String get comidaMensaje => 'Don\'t forget to log your meal to keep your stats updated.';
+
+  @override
+  String get cenaRecordatorio => 'Time to log your dinner 🌙';
+
+  @override
+  String get cenaMensaje => 'Logging dinner helps complete your daily progress.';
+
+  @override
+  String get metaProteina => 'Protein goal';
+
+  @override
+  String get metaCarbs => 'Carbs goal';
+
+  @override
+  String get metaGrasas => 'Fat goal';
+
+  @override
+  String get balanceNutricional => 'Nutrition balance';
+
+  @override
+  String get sugerenciaDelDia => 'Suggestion of the day';
+
+  @override
+  String get consumoElevado => 'High intake';
+
+  @override
+  String get consumoBajo => 'Low intake';
+
+  @override
+  String get excelenteBalance => 'Excellent balance';
 }

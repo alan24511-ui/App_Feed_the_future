@@ -154,5 +154,27 @@
     "costillasBbq": "🍖 Costillas BBQ",
     "desayuno": "Desayuno",
     "cena": "Cena",
-    "tipoComida": "Tipo de comida"
+    "tipoComida": "Tipo de comida",
+      "recomendaciones": "Recomendaciones diarias",
+      "recomendacionProteina": "Te falta proteína hoy. Prueba agregar pollo, huevos o atún.",
+      "recomendacionCarbs": "Tus carbohidratos están bajos. Puedes añadir arroz, avena o pasta.",
+      "recomendacionGrasas": "Necesitas más grasas saludables. Intenta agregar aguacate o nueces.",
+      "recomendacionCaloriasAltas": "Has consumido muchas calorías hoy. Considera una cena ligera.",
+      "recomendacionBalanceada": "¡Buen trabajo! Tu alimentación de hoy se ve balanceada.",
+      "consejoNutricional": "Consejo nutricional",
+      "desayunoRecordatorio": "Hora de registrar tu desayuno 🍳",
+      "desayunoMensaje": "Registrar tu desayuno ayuda a mantener tu seguimiento nutricional.",
+      "comidaRecordatorio": "Hora de registrar tu comida 🍛",
+      "comidaMensaje": "No olvides registrar tu comida para mantener tus estadísticas actualizadas.",
+      "cenaRecordatorio": "Hora de registrar tu cena 🌙",
+      "cenaMensaje": "Registrar tu cena ayuda a completar tu progreso diario.",
+      "metaProteina": "Meta de proteína",
+      "metaCarbs": "Meta de carbohidratos",
+      "metaGrasas": "Meta de grasas",
+      "balanceNutricional": "Balance nutricional",
+      "sugerenciaDelDia": "Sugerencia del día",
+      "consumoElevado": "Consumo elevado",
+      "consumoBajo": "Consumo bajo",
+      "excelenteBalance": "Excelente balance"
+
 }

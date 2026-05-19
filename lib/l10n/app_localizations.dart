@@ -826,6 +826,132 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Meal type'**
   String get tipoComida;
+
+  /// No description provided for @recomendaciones.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily recommendations'**
+  String get recomendaciones;
+
+  /// No description provided for @recomendacionProteina.
+  ///
+  /// In en, this message translates to:
+  /// **'You need more protein today. Try adding chicken, eggs or tuna.'**
+  String get recomendacionProteina;
+
+  /// No description provided for @recomendacionCarbs.
+  ///
+  /// In en, this message translates to:
+  /// **'Your carbs are low. You can add rice, oats or pasta.'**
+  String get recomendacionCarbs;
+
+  /// No description provided for @recomendacionGrasas.
+  ///
+  /// In en, this message translates to:
+  /// **'You need more healthy fats. Try adding avocado or nuts.'**
+  String get recomendacionGrasas;
+
+  /// No description provided for @recomendacionCaloriasAltas.
+  ///
+  /// In en, this message translates to:
+  /// **'You consumed many calories today. Consider a lighter dinner.'**
+  String get recomendacionCaloriasAltas;
+
+  /// No description provided for @recomendacionBalanceada.
+  ///
+  /// In en, this message translates to:
+  /// **'Great job! Your nutrition today looks balanced.'**
+  String get recomendacionBalanceada;
+
+  /// No description provided for @consejoNutricional.
+  ///
+  /// In en, this message translates to:
+  /// **'Nutrition tip'**
+  String get consejoNutricional;
+
+  /// No description provided for @desayunoRecordatorio.
+  ///
+  /// In en, this message translates to:
+  /// **'Time to log your breakfast 🍳'**
+  String get desayunoRecordatorio;
+
+  /// No description provided for @desayunoMensaje.
+  ///
+  /// In en, this message translates to:
+  /// **'Logging breakfast helps maintain your nutrition tracking.'**
+  String get desayunoMensaje;
+
+  /// No description provided for @comidaRecordatorio.
+  ///
+  /// In en, this message translates to:
+  /// **'Time to log your lunch 🍛'**
+  String get comidaRecordatorio;
+
+  /// No description provided for @comidaMensaje.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t forget to log your meal to keep your stats updated.'**
+  String get comidaMensaje;
+
+  /// No description provided for @cenaRecordatorio.
+  ///
+  /// In en, this message translates to:
+  /// **'Time to log your dinner 🌙'**
+  String get cenaRecordatorio;
+
+  /// No description provided for @cenaMensaje.
+  ///
+  /// In en, this message translates to:
+  /// **'Logging dinner helps complete your daily progress.'**
+  String get cenaMensaje;
+
+  /// No description provided for @metaProteina.
+  ///
+  /// In en, this message translates to:
+  /// **'Protein goal'**
+  String get metaProteina;
+
+  /// No description provided for @metaCarbs.
+  ///
+  /// In en, this message translates to:
+  /// **'Carbs goal'**
+  String get metaCarbs;
+
+  /// No description provided for @metaGrasas.
+  ///
+  /// In en, this message translates to:
+  /// **'Fat goal'**
+  String get metaGrasas;
+
+  /// No description provided for @balanceNutricional.
+  ///
+  /// In en, this message translates to:
+  /// **'Nutrition balance'**
+  String get balanceNutricional;
+
+  /// No description provided for @sugerenciaDelDia.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggestion of the day'**
+  String get sugerenciaDelDia;
+
+  /// No description provided for @consumoElevado.
+  ///
+  /// In en, this message translates to:
+  /// **'High intake'**
+  String get consumoElevado;
+
+  /// No description provided for @consumoBajo.
+  ///
+  /// In en, this message translates to:
+  /// **'Low intake'**
+  String get consumoBajo;
+
+  /// No description provided for @excelenteBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Excellent balance'**
+  String get excelenteBalance;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
