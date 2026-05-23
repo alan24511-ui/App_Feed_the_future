@@ -3,10 +3,15 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 import 'firebase_options.dart';
 
 import 'l10n/app_localizations.dart';
+
 import 'screens/login.dart';
+import 'screens/home_screen.dart';
+
 import 'services/notificacion_service.dart';
 
 void main() async {
@@ -165,12 +170,41 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.blue,
       ),
 
-      // 🔥 RUTAS
-      initialRoute: '/',
+      // 🔥 MANTENER SESIÓN INICIADA
+      home: StreamBuilder<User?>(
+        stream:
+        FirebaseAuth.instance.authStateChanges(),
 
-      routes: {
-        '/': (context) => const Login(),
-      },
+        builder: (context, snapshot) {
+
+          // 🔄 CARGANDO
+          if (snapshot.connectionState ==
+              ConnectionState.waiting) {
+
+            return const Scaffold(
+              body: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+
+          // ✅ USUARIO LOGUEADO
+          if (snapshot.hasData) {
+
+            final user = snapshot.data!;
+
+            return HomeScreen(
+              nombre:
+              user.displayName ?? "Usuario",
+
+              imc: 0,
+            );
+          }
+
+          // ❌ NO LOGUEADO
+          return const Login();
+        },
+      ),
     );
   }
 }
