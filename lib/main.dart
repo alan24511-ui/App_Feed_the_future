@@ -22,12 +22,8 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // 🔥 INICIALIZAR NOTIFICACIONES
+  // 🔥 SOLO INICIALIZAR
   await NotificacionService.init();
-
-  // 🔥 PROGRAMAR RECORDATORIOS
-  await NotificacionService
-      .programarNotificaciones();
 
   runApp(const MyApp());
 }
@@ -75,7 +71,6 @@ class _MyAppState extends State<MyApp> {
     cargarPreferencias();
   }
 
-  // 🔥 CARGAR PREFERENCIAS
   Future<void> cargarPreferencias() async {
 
     final prefs =
@@ -95,7 +90,6 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  // 🔥 CAMBIAR IDIOMA
   void cambiarIdioma(Locale locale) async {
 
     final prefs =
@@ -112,7 +106,6 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  // 🔥 CAMBIAR TEMA
   void cambiarTema(bool oscuro) async {
 
     final prefs =
@@ -133,9 +126,9 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
 
     return MaterialApp(
+
       debugShowCheckedModeBanner: false,
 
-      // 🔥 IDIOMA
       locale: _locale,
 
       supportedLocales: const [
@@ -154,7 +147,6 @@ class _MyAppState extends State<MyApp> {
         GlobalCupertinoLocalizations.delegate,
       ],
 
-      // 🔥 TEMA
       themeMode:
       _modoOscuro
           ? ThemeMode.dark
@@ -170,7 +162,6 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.blue,
       ),
 
-      // 🔥 MANTENER SESIÓN INICIADA
       home: StreamBuilder<User?>(
         stream:
         FirebaseAuth.instance.authStateChanges(),
@@ -188,6 +179,18 @@ class _MyAppState extends State<MyApp> {
             );
           }
 
+          // ❌ ERROR FIREBASE
+          if (snapshot.hasError) {
+
+            return const Scaffold(
+              body: Center(
+                child: Text(
+                  "Error al conectar Firebase",
+                ),
+              ),
+            );
+          }
+
           // ✅ USUARIO LOGUEADO
           if (snapshot.hasData) {
 
@@ -196,7 +199,6 @@ class _MyAppState extends State<MyApp> {
             return HomeScreen(
               nombre:
               user.displayName ?? "Usuario",
-
               imc: 0,
             );
           }

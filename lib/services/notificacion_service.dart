@@ -1,4 +1,5 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
@@ -29,66 +30,91 @@ class NotificacionService {
 
   static Future programarNotificaciones() async {
 
-    // 🍳 DESAYUNO
-    await flutterLocalNotificationsPlugin
-        .zonedSchedule(
-      1,
-      'Desayuno 🍳',
-      'Recuerda registrar tu desayuno',
-      _hora(8, 0),
-      _detalles(),
-      androidScheduleMode:
-      AndroidScheduleMode.inexactAllowWhileIdle,
-      uiLocalNotificationDateInterpretation:
-      UILocalNotificationDateInterpretation
-          .absoluteTime,
-      matchDateTimeComponents:
-      DateTimeComponents.time,
-    );
+    try {
 
-    // 🍛 COMIDA
-    await flutterLocalNotificationsPlugin
-        .zonedSchedule(
-      2,
-      'Comida 🍛',
-      'No olvides registrar tu comida',
-      _hora(14, 0),
-      _detalles(),
-      androidScheduleMode:
-      AndroidScheduleMode.inexactAllowWhileIdle,
-      uiLocalNotificationDateInterpretation:
-      UILocalNotificationDateInterpretation
-          .absoluteTime,
-      matchDateTimeComponents:
-      DateTimeComponents.time,
-    );
+      await flutterLocalNotificationsPlugin
+          .cancelAll();
 
-    // 🌙 CENA
-    await flutterLocalNotificationsPlugin
-        .zonedSchedule(
-      3,
-      'Cena 🌙',
-      'Registra tu cena para mantener tu progreso',
-      _hora(20, 0),
-      _detalles(),
-      androidScheduleMode:
-      AndroidScheduleMode.inexactAllowWhileIdle,
-      uiLocalNotificationDateInterpretation:
-      UILocalNotificationDateInterpretation
-          .absoluteTime,
-      matchDateTimeComponents:
-      DateTimeComponents.time,
-    );
+      // 🍳 DESAYUNO
+      await flutterLocalNotificationsPlugin
+          .zonedSchedule(
+        1,
+        'Desayuno 🍳',
+        'Recuerda registrar tu desayuno',
+        _hora(8, 0),
+        _detalles(),
+
+        androidScheduleMode:
+        AndroidScheduleMode.inexactAllowWhileIdle,
+
+        uiLocalNotificationDateInterpretation:
+        UILocalNotificationDateInterpretation
+            .absoluteTime,
+
+        matchDateTimeComponents:
+        DateTimeComponents.time,
+      );
+
+      // 🍛 COMIDA
+      await flutterLocalNotificationsPlugin
+          .zonedSchedule(
+        2,
+        'Comida 🍛',
+        'No olvides registrar tu comida',
+        _hora(14, 0),
+        _detalles(),
+
+        androidScheduleMode:
+        AndroidScheduleMode.inexactAllowWhileIdle,
+
+        uiLocalNotificationDateInterpretation:
+        UILocalNotificationDateInterpretation
+            .absoluteTime,
+
+        matchDateTimeComponents:
+        DateTimeComponents.time,
+      );
+
+      // 🌙 CENA
+      await flutterLocalNotificationsPlugin
+          .zonedSchedule(
+        3,
+        'Cena 🌙',
+        'Registra tu cena para mantener tu progreso',
+        _hora(20, 0),
+        _detalles(),
+
+        androidScheduleMode:
+        AndroidScheduleMode.inexactAllowWhileIdle,
+
+        uiLocalNotificationDateInterpretation:
+        UILocalNotificationDateInterpretation
+            .absoluteTime,
+
+        matchDateTimeComponents:
+        DateTimeComponents.time,
+      );
+
+    } catch (e) {
+
+      print(
+        "ERROR NOTIFICACIONES: $e",
+      );
+    }
   }
 
   static NotificationDetails _detalles() {
 
     return const NotificationDetails(
+
       android: AndroidNotificationDetails(
+
         'comidas_channel',
+
         'Recordatorios de comidas',
 
         importance: Importance.max,
+
         priority: Priority.high,
       ),
     );
